@@ -539,7 +539,11 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         };
     }, []);
 
-    return (
-        <div ref={containerRef} className="fixed top-0 left-0 w-full h-full z-0 outline-none" />
+return (
+        <div 
+            ref={containerRef} 
+            className="fixed top-0 left-0 w-full h-full outline-none pointer-events-none" 
+            style={{ zIndex: -1 }}
+        />
     );
 };
