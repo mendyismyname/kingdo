@@ -27,4 +27,6 @@ try {
   console.error('❌ Failed to initialize Supabase client:', error);
   throw error;
 }
+  const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
+  const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
   export const supabase = createClient(supabaseUrl, supabaseAnonKey);
