@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>King.do</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Merriweather', 'serif'],
+              display: ['Cinzel', 'serif'],
+            },
+            colors: {
+              king: {
+                primary: 'var(--king-primary)',
+                primaryLight: 'var(--king-primary-light)',
+                secondary: 'var(--king-secondary)',
+                dark: '#0F172A',
+                cream: '#FDFBF7',
+                surface: '#FFFFFF',
+                muted: '#94A3B8',
+                text: '#1E293B',
+                teal: '#14B8A6',
+                amber: '#F59E0B',
+                purple: '#A855F7',
+                blue: '#6366F1',
+              }
+            },
+            backgroundImage: {
+              'king-gradient': 'linear-gradient(135deg, var(--king-primary) 0%, var(--king-primary-light) 100%)',
+              'gold-gradient': 'linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%)',
+            },
+            boxShadow: {
+              'regal': '0 10px 40px -10px rgba(20, 184, 166, 0.15)',
+              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+              'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01)',
+              'glow': '0 0 20px -5px var(--king-primary)',
+            },
+            animation: {
+              'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-in-right': 'slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-in': 'fadeIn 0.6s ease-out forwards',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 12s linear infinite',
+              'reverse-spin': 'spin 15s linear infinite reverse',
+            },
+            keyframes: {
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              slideInRight: {
+                '0%': { transform: 'translateX(100%)' },
+                '100%': { transform: 'translateX(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --king-primary: #0D9488;
+        --king-primary-light: #2DD4BF;
+        --king-secondary: #D97706;
+      }
+      body.theme-orange {
+        --king-primary: #C2410C;
+        --king-primary-light: #FB923C;
+        --king-secondary: #FBBF24;
+      }
+      body.theme-blue {
+        --king-primary: #1D4ED8;
+        --king-primary-light: #60A5FA;
+        --king-secondary: #F472B6;
+      }
+      body.theme-purple {
+        --king-primary: #7E22CE;
+        --king-primary-light: #C084FC;
+        --king-secondary: #FACC15;
+      }
+      body {
+        background-color: #FDFBF7;
+        color: #1E293B;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--king-primary); }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+        border-top: 1px solid rgba(0,0,0,0.05);
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(135deg, var(--king-primary) 0%, var(--king-primary-light) 100%);
+      }
+      .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .delay-100 { animation-delay: 100ms; }
+      .delay-200 { animation-delay: 200ms; }
+      .delay-300 { animation-delay: 300ms; }
+      .delay-400 { animation-delay: 400ms; }
+      .delay-500 { animation-delay: 500ms; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "three": "https://esm.sh/three@0.160.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
