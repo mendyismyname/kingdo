@@ -1,19 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } from "../types";
 
-// Correctly access the VITE_ prefixed environment variable
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-// Ensure the API key is provided
-if (!apiKey) {
-  console.error("VITE_GEMINI_API_KEY is not set. Please check your .env.local file.");
-  // Depending on your error handling strategy, you might want to throw an error here
-  // or provide a fallback mechanism.
-  // For now, we'll let the GoogleGenAI constructor handle the missing key error,
-  // which should now be clearer why it's happening.
-}
-
-const ai = new GoogleGenAI({ apiKey: apiKey });
+// --- Constants ---
 const MODEL_ID = "gemini-2.5-flash";
 
 // --- Helper Functions (Image Map, System Instruction) ---
@@ -144,16 +132,40 @@ Directives:
 `;
 };
 
+// --- AI Client Initialization ---
+// Function to get the API key from environment variables
+const getApiKey = (): string | undefined => {
+  return import.meta.env.VITE_GEMINI_API_KEY;
+};
+
+// Function to create the AI client instance
+const createAiClient = (key: string) => {
+  return new GoogleGenAI({ apiKey: key });
+};
+
 // --- Exported Functions ---
 
 export const generateDailyInsight = async (profile: UserProfile): Promise<Insight> => {
-  // Check if AI client is initialized (implies key is set)
+  const apiKey = getApiKey();
+
   if (!apiKey) {
-    console.warn("Gemini API key not found. Returning fallback insight.");
+    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback insight.");
     return {
       content: "The King is waiting for your return.",
       source: "Inner Voice",
       actionableStep: "Take a moment of silence."
+    };
+  }
+
+  let ai: GoogleGenAI;
+  try {
+    ai = createAiClient(apiKey);
+  } catch (initError) {
+    console.error("Failed to initialize GoogleGenAI client:", initError);
+    return {
+      content: "The King's wisdom is currently sealed.",
+      source: "Inner Voice",
+      actionableStep: "Check your connection to the source."
     };
   }
 
@@ -172,9 +184,9 @@ Return as JSON.`;
         systemInstruction: systemInstruction,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "OBJECT", // Assuming Type.OBJECT maps to "OBJECT" string
+          type: "OBJECT",
           properties: {
-            content: { type: "STRING" }, // Assuming Type.STRING maps to "STRING" string
+            content: { type: "STRING" },
             source: { type: "STRING" },
             actionableStep: { type: "STRING" },
           },
@@ -209,12 +221,18 @@ const getRandomImage = (category: string) => {
 };
 
 export const generateNewsFeed = async (profile: UserProfile): Promise<NewsItem[]> => {
-  // NOTE: This function is currently bypassed in Dashboard.tsx by hardcoded news
-  // but kept here for fallback or future dynamic generation.
+  const apiKey = getApiKey();
 
-  // Check if AI client is initialized (implies key is set)
   if (!apiKey) {
-    console.warn("Gemini API key not found. Returning empty news feed.");
+    console.warn("VITE_GEMINI_API_KEY is not set. Returning empty news feed.");
+    return [];
+  }
+
+  let ai: GoogleGenAI;
+  try {
+    ai = createAiClient(apiKey);
+  } catch (initError) {
+    console.error("Failed to initialize GoogleGenAI client:", initError);
     return [];
   }
 
@@ -234,9 +252,9 @@ Return as JSON Array.`;
         systemInstruction,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "ARRAY", // Assuming Type.ARRAY maps to "ARRAY" string
+          type: "ARRAY",
           items: {
-            type: "OBJECT", // Assuming Type.OBJECT maps to "OBJECT" string
+            type: "OBJECT",
             properties: {
               id: { type: "STRING" },
               headline: { type: "STRING" },
@@ -272,10 +290,19 @@ export const chatWithKing = async (
   message: string,
   history: { role: 'user' | 'model', text: string }[]
 ) => {
-  // Check if AI client is initialized (implies key is set)
+  const apiKey = getApiKey();
+
   if (!apiKey) {
-    console.warn("Gemini API key not found. Returning fallback chat message.");
+    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback chat message.");
     return "The King's wisdom is currently sealed. Please check your connection to the source.";
+  }
+
+  let ai: GoogleGenAI;
+  try {
+    ai = createAiClient(apiKey);
+  } catch (initError) {
+    console.error("Failed to initialize GoogleGenAI client:", initError);
+    return "The King's wisdom is currently sealed. Initialization failed.";
   }
 
   const systemInstruction = getSystemInstruction(profile);
@@ -305,9 +332,18 @@ export const chatWithKing = async (
 };
 
 export const suggestHabitFromChat = async (profile: UserProfile, chatContext: string): Promise<any> => {
-  // Check if AI client is initialized (implies key is set)
+  const apiKey = getApiKey();
+
   if (!apiKey) {
-    console.warn("Gemini API key not found. Returning null habit suggestion.");
+    console.warn("VITE_GEMINI_API_KEY is not set. Returning null habit suggestion.");
+    return null;
+  }
+
+  let ai: GoogleGenAI;
+  try {
+    ai = createAiClient(apiKey);
+  } catch (initError) {
+    console.error("Failed to initialize GoogleGenAI client:", initError);
     return null;
   }
 
@@ -323,7 +359,7 @@ Return JSON: { "title": "string", "category": "THOUGHT" | "SPEECH" | "ACTION", "
         systemInstruction,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "OBJECT", // Assuming Type.OBJECT maps to "OBJECT" string
+          type: "OBJECT",
           properties: {
             title: { type: "STRING" },
             category: { type: "STRING", enum: ["THOUGHT", "SPEECH", "ACTION"] },
@@ -340,14 +376,28 @@ Return JSON: { "title": "string", "category": "THOUGHT" | "SPEECH" | "ACTION", "
 };
 
 export const generateBookLesson = async (profile: UserProfile, bookTitle: string, chapter: number): Promise<BookLesson> => {
-  // Check if AI client is initialized (implies key is set)
+  const apiKey = getApiKey();
+
   if (!apiKey) {
-    console.warn("Gemini API key not found. Returning fallback book lesson.");
+    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback book lesson.");
     return {
       title: "Study Error",
       content: "Could not retrieve lesson from the archives.",
       summary: "Try again later.",
       practicalApplication: "Review what you learned yesterday."
+    };
+  }
+
+  let ai: GoogleGenAI;
+  try {
+    ai = createAiClient(apiKey);
+  } catch (initError) {
+    console.error("Failed to initialize GoogleGenAI client:", initError);
+    return {
+      title: "Study Error",
+      content: "Could not retrieve lesson from the archives.",
+      summary: "Initialization failed.",
+      practicalApplication: "Check your connection to the source."
     };
   }
 
@@ -368,7 +418,7 @@ Provide a concise lesson. Return JSON with:
         systemInstruction,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "OBJECT", // Assuming Type.OBJECT maps to "OBJECT" string
+          type: "OBJECT",
           properties: {
             title: { type: "STRING" },
             content: { type: "STRING" },
