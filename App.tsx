@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Onboarding } from './src/components/Onboarding';
 import { Layout } from './components/Layout';
-import { Dashboard } from './src/components/Dashboard';
+import { Dashboard } from './components/Dashboard';
 import { HabitTracker } from './src/components/HabitTracker';
 import { StudySession } from './components/StudySession';
 import { Library } from './src/components/Library';
