@@ -210,12 +210,7 @@ useEffect(() => {
         // --- Lighting ---
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
-// --- DEBUG CUBE (Delete after testing) ---
-const debugGeo = new THREE.BoxGeometry(10, 10, 10);
-const debugMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const debugCube = new THREE.Mesh(debugGeo, debugMat);
-debugCube.position.set(0, 20, 0); // Put it high up
-scene.add(debugCube);
+
         const dirLight = new THREE.DirectionalLight(0xfffaed, 1.0);
         dirLight.position.set(80, 150, 50);
         dirLight.castShadow = true;
