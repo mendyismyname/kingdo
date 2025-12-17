@@ -22,12 +22,12 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         scene.fog = new THREE.FogExp2(0x8fa3c0, 0.006);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 3000);
-        // Initial position matches the start of animation
+        // Start closer so it doesn't look small
         camera.position.set(0, 5, 60);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        // FIX: High resolution for retina screens
+        // Fix resolution for sharp rendering
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -432,14 +432,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         floor.position.y = -5;
         scene.add(floor);
 
-        // --- ANIMATION LOOP (Fixed) ---
-        let scrollPercent = 0;
-        let targetScrollPercent = 0;
-        const clock = new THREE.Clock();
-        const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
-        let frameId: number;
-
-        // --- ANIMATION LOOP (Debug Version) ---
+        // --- ANIMATION LOOP (ROBUST) ---
         let scrollPercent = 0;
         let targetScrollPercent = 0;
         const clock = new THREE.Clock();
@@ -469,11 +462,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             // Lerp for smoothness
             scrollPercent = lerp(scrollPercent, targetScrollPercent, 0.05);
 
-            // 2. DEBUG LOG (Open console to see this!)
-            // Un-comment the line below if you suspect scroll is stuck at 0
-            // console.log("Scroll %:", scrollPercent.toFixed(3), "Height:", scrollable);
-
-            // 3. ANIMATIONS
+            // 2. ANIMATIONS
             
             // Skybox rotation
             if (skyBox.material instanceof THREE.MeshBasicMaterial && skyBox.material.map) {
@@ -528,7 +517,6 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             camera.lookAt(0, 30, -50);
             renderer.render(scene, camera);
         };
-
 
         animate();
 
