@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Book, BookProgress, UserProfile, BookLesson, Demographic } from '../types';
+import { Book, BookProgress, UserProfile, BookLesson, Demographic } from '../../types';
 
 interface LibraryProps {
   userProfile: UserProfile;
