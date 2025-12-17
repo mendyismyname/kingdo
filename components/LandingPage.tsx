@@ -5,561 +5,774 @@ interface LandingPageProps {
   onEnter: () => void;
 }
 
+type Mode = 'JEWISH' | 'NOAHIDE' | 'SEEKING';
+
+// Replace HTML string wrapper with fragment for React rendering
+const KEY = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+
+const CONTENT = {
+    JEWISH: {
+        subtitle: "קבלת עול מלכות שמים",
+        appSub: "The central hub of your Avodah.",
+        quoteText: <KEY>Build me a<br className="hidden md:block" /> Sanctuary</KEY>,
+        quoteSource: "Exodus 25:8",
+        tablet1: { title: "Daily Avodah", sub: "Action", iconType: "Hammer" },
+        tablet2: { title: "Sacred Study", sub: "Intellect", iconType: "BookOpen" },
+        phone1: { title: "Sanctify the Morning" },
+        phone2: { title: "Tanya", chapter: "53", text: '"It is explicitly stated in the oath..."' },
+        phone3: { name: "King David" },
+        nodes: [
+            { id: 'tzedakah', label: "Giving", val: "$18.00" },
+            { id: 'study', label: "Study", val: "Ch. 41" },
+            { id: 'mincha', label: "Prayer", val: "4:30 PM" },
+            { id: 'date', label: "Calendar", val: "19 Kislev" }
+        ],
+        feed: {
+            heroTitle: "Mincha",
+            heroSub: "4:30 PM • Main Shul",
+            item1Title: "Tzedakah",
+            item1Sub: "Daily Giving",
+            item2Title: "Tanya",
+            item2Sub: "Chapter 41"
+        },
+        orbit: [
+            { type: 'EVENT', title: 'Grand Farbrengen', sub: 'Tonight • 8:00 PM', color: 'amber', radiusMultiplier: 0.8, angle: 0, speed: 1, opacity: 1, blur: 0 },
+            { type: 'MENTOR', title: 'Mentor', sub: 'Online Now', color: 'indigo', radiusMultiplier: 1.1, angle: 45, speed: 0.7, opacity: 0.6, blur: 1.5 },
+            { type: 'STUDY', title: 'Chavrusa', sub: 'Study Tanya', color: 'emerald', radiusMultiplier: 0.8, angle: 120, speed: 1.1, opacity: 0.8, blur: 0.5 },
+            { type: 'REMINDER', title: 'Mincha', sub: 'In 15 Minutes', color: 'rose', radiusMultiplier: 1.1, angle: 180, speed: 0.8, opacity: 0.4, blur: 2 },
+            { type: 'MISSION', title: 'Daily Mitzvah', sub: 'Give Tzedakah', color: 'purple', radiusMultiplier: 0.8, angle: 240, speed: 0.95, opacity: 1, blur: 0 },
+            { type: 'ALERT', title: 'Update', sub: 'Winter Schedule', color: 'orange', radiusMultiplier: 1.1, angle: 300, speed: 0.6, opacity: 0.7, blur: 1 },
+            { type: 'GOAL', title: '$1,800', sub: 'Giving Goal', color: 'teal', radiusMultiplier: 0.8, angle: 60, speed: 1.2, opacity: 0.5, blur: 1.2 }
+        ]
+    },
+    NOAHIDE: {
+        subtitle: "The Seven Laws of Noah",
+        appSub: "The foundation of your Divine service.",
+        quoteText: <KEY>A House of Prayer<br className="hidden md:block" /> for All Peoples</KEY>,
+        quoteSource: "Isaiah 56:7",
+        tablet1: { title: "Divine Code", sub: "Justice", iconType: "Hammer" },
+        tablet2: { title: "Moral Study", sub: "Intellect", iconType: "BookOpen" },
+        phone1: { title: "Morning Gratitude" },
+        phone2: { title: "Divine Code", chapter: "7", text: '"The foundation of a civilized world..."' },
+        phone3: { name: "Adam Noah" },
+        nodes: [
+            { id: 'charity', label: "Charity", val: "$10.00" },
+            { id: 'study', label: "Study", val: "Gate 1" },
+            { id: 'prayer', label: "Prayer", val: "Sunset" },
+            { id: 'date', label: "Calendar", val: "Nov 12" }
+        ],
+        feed: {
+            heroTitle: "Prayer",
+            heroSub: "Sunset • Personal",
+            item1Title: "Charity",
+            item1Sub: "Kindness",
+            item2Title: "Study",
+            item2Sub: "Divine Code"
+        },
+        orbit: [
+            { type: 'LAW', title: 'Divine Code', sub: 'Prohibition of Theft', color: 'amber', radiusMultiplier: 0.8, angle: 0, speed: 1, opacity: 1, blur: 0 },
+            { type: 'JUSTICE', title: 'Court Session', sub: '2:00 PM Today', color: 'indigo', radiusMultiplier: 1.1, angle: 60, speed: 0.7, opacity: 0.5, blur: 2 },
+            { type: 'MISSION', title: 'Kindness', sub: 'Anonymous Act', color: 'emerald', radiusMultiplier: 0.8, angle: 140, speed: 1.1, opacity: 0.8, blur: 0.5 },
+            { type: 'STUDY', title: 'Noahide Center', sub: 'Live Class Now', color: 'teal', radiusMultiplier: 1.1, angle: 200, speed: 0.8, opacity: 0.7, blur: 1 },
+            { type: 'WISDOM', title: 'Psalms', sub: 'Chapter 23', color: 'purple', radiusMultiplier: 0.8, angle: 280, speed: 0.9, opacity: 0.4, blur: 2.5 }
+        ]
+    },
+    SEEKING: {
+        subtitle: "The Architecture of the Soul",
+        appSub: "Your digital blueprint for Self-Mastery.",
+        quoteText: <KEY><span className="md:whitespace-nowrap">The Soul of Man is</span><br className="hidden md:block" /> <span className="md:whitespace-nowrap">the Candle of G-d</span></KEY>,
+        quoteSource: "Proverbs 20:27",
+        tablet1: { title: "Self-Mastery", sub: "Discipline", iconType: "Compass" },
+        tablet2: { title: "Higher Wisdom", sub: "Intellect", iconType: "BookOpen" },
+        phone1: { title: "Morning Alignment" },
+        phone2: { title: "Wisdom", chapter: "12", text: '"To know yourself is the beginning..."' },
+        phone3: { name: "Architect" },
+        nodes: [
+            { id: 'giving', label: "Altruism", val: "Daily" },
+            { id: 'study', label: "Insight", val: "Lesson 4" },
+            { id: 'meditate', label: "Focus", val: "20 min" },
+            { id: 'date', label: "Journal", val: "Entry 82" }
+        ],
+        feed: {
+            heroTitle: "Focus",
+            heroSub: "20 min • Solitude",
+            item1Title: "Altruism",
+            item1Sub: "Anonymous Act",
+            item2Title: "Wisdom",
+            item2Sub: "Ancient Stoics"
+        },
+        orbit: [
+            { type: 'FOCUS', title: 'Solitude', sub: '20m Focused Silence', color: 'amber', radiusMultiplier: 0.8, angle: 0, speed: 1, opacity: 1, blur: 0 },
+            { type: 'WISDOM', title: 'Meditations', sub: 'Marcus Aurelius', color: 'indigo', radiusMultiplier: 1.1, angle: 90, speed: 0.6, opacity: 0.5, blur: 1.5 },
+            { type: 'ALIGN', title: 'Alignment', sub: 'Morning Routine', color: 'teal', radiusMultiplier: 0.8, angle: 180, speed: 1.2, opacity: 0.8, blur: 0.5 },
+            { type: 'JOURNAL', title: 'Reflection', sub: 'Virtue Check', color: 'emerald', radiusMultiplier: 1.1, angle: 270, speed: 0.8, opacity: 0.4, blur: 2.5 }
+        ]
+    }
+};
+
 // --- Icons ---
-const RefreshCw = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>;
-const BookOpen = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
-const MapPin = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>;
 const Globe = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
 const ChevronRight = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="9 18 15 12 9 6"/></svg>;
-const Menu = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
-const Zap = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>;
-const Shield = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+const Compass = (props: any) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>;
 const Lock = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+const Crown = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z"/></svg>;
+const Hammer = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="M20.91 11.7l-1.25-1.25c-.6-.6-.93-1.4-.93-2.25V7.86c0-.55-.45-1-1-1H16.4c-.84 0-1.65-.33-2.25-.93L12.9 4.68"/></svg>;
+const BookOpen = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+const Check = (props: any) => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="20 6 9 17 4 12"/></svg>;
+
+const Volume2 = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>;
+const VolumeX = (props: any) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>;
 
 // --- SUB-COMPONENTS ---
 
 const PhoneMockup = ({ children, style, className, rotateX = 0, rotateY = 0 }: any) => (
   <div 
-    className={`relative w-[280px] md:w-[320px] h-[600px] bg-stone-900 rounded-[3rem] border-[8px] border-stone-900 shadow-2xl mx-auto will-change-transform ${className}`} 
+    className={`relative w-[300px] md:w-[320px] h-[640px] bg-[#121212] rounded-[3.5rem] border-[6px] border-[#2a2a2a] shadow-2xl mx-auto will-change-transform ${className}`} 
     style={{
         transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transformStyle: 'preserve-3d',
+        boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255,255,255,0.05)',
         ...style
     }}
   >
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-stone-900 rounded-b-xl z-50"></div>
-    <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative flex flex-col backface-hidden">
+    <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-tr from-white/5 to-transparent pointer-events-none z-50"></div>
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-50 flex items-center justify-center gap-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]"></div>
+        <div className="w-10 h-1.5 rounded-full bg-[#1a1a1a]/50"></div>
+    </div>
+    
+    <div className="w-full h-full bg-white rounded-[3rem] overflow-hidden relative flex flex-col backface-hidden">
       {children}
     </div>
   </div>
 );
 
-const TealCard = ({ style }: any) => (
-  <div className="absolute bg-[#0D9488] rounded-[2rem] p-6 w-64 h-64 shadow-xl text-white select-none flex flex-col justify-between origin-center" style={style}>
-    <div>
-      <div className="flex items-center gap-2 mb-4 opacity-80">
-        <RefreshCw />
-        <span className="font-medium font-display">Daily Avodah</span>
+const StoneTablet = ({ style, title, subtitle, icon }: any) => (
+  <div className="absolute bg-[#FDFBF7] rounded-[2rem] p-6 w-64 h-auto shadow-[0_20px_40px_-5px_rgba(0,0,0,0.1),0_0_0_1px_rgba(0,0,0,0.05)] text-stone-800 select-none flex flex-col justify-between origin-center overflow-hidden" style={style}>
+    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')] mix-blend-multiply pointer-events-none"></div>
+    
+    <div className="relative z-10">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 border border-stone-200">
+            {icon}
+        </div>
+        <div>
+            <div className="font-display font-bold text-lg leading-tight">{title}</div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400">{subtitle}</div>
+        </div>
       </div>
-      <div className="text-3xl font-bold tracking-tight">12/12</div>
-      <div className="text-white/80 font-medium mt-1">Habits Completed</div>
+      <div className="h-1 w-full bg-stone-100 rounded-full mb-3 overflow-hidden">
+          <div className="h-full bg-stone-800 w-2/3 rounded-full"></div>
+      </div>
+      <div className="flex gap-1">
+           <div className="h-1.5 w-1.5 rounded-full bg-stone-300"></div>
+           <div className="h-1.5 w-12 rounded-full bg-stone-100"></div>
+      </div>
     </div>
-    <div className="bg-white/20 backdrop-blur-md w-fit px-4 py-1.5 rounded-full text-xs font-bold">Streak Active</div>
   </div>
 );
 
-const AmberCard = ({ style }: any) => (
-    <div className="absolute bg-white rounded-[2rem] p-2 w-60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] select-none origin-center border border-gray-100 overflow-hidden" style={style}>
-      <div className="bg-[#D97706] p-4 rounded-[1.5rem] text-white mb-2">
-        <div className="flex items-center gap-2 mb-6">
-          <BookOpen />
-          <span className="font-bold font-display">Daily Study</span>
-        </div>
-        <div className="text-4xl font-bold mb-1">Ch. 41</div>
-        <div className="text-amber-100 text-xs font-medium">Tanya</div>
-      </div>
-      <div className="w-full py-3 text-center text-gray-600 font-bold text-sm">Continue Reading</div>
-    </div>
+const GlassArtifact = ({ style, label, value, variant = 'light' }: any) => (
+  <div className={`absolute backdrop-blur-xl border rounded-[2rem] p-6 w-60 h-60 shadow-2xl select-none flex flex-col items-center justify-center text-center origin-center ${
+      variant === 'dark' 
+      ? 'bg-stone-900/5 border-stone-900/10 text-stone-900' 
+      : 'bg-white/10 border-white/20 text-white'
+  }`} style={style}>
+      <div className={`text-5xl font-display font-bold mb-2 drop-shadow-sm ${variant === 'dark' ? 'text-stone-900' : 'text-white'}`}>{value}</div>
+      <div className={`text-xs font-bold uppercase tracking-[0.2em] ${variant === 'dark' ? 'text-stone-600' : 'text-white/90'}`}>{label}</div>
+  </div>
 );
 
-const PhotoCard = ({ style }: any) => (
-    <div className="absolute w-64 h-64 rounded-[2.5rem] shadow-2xl overflow-hidden origin-center bg-gray-900 border-4 border-white" style={style}>
-      <img src="https://images.unsplash.com/photo-1507692049790-de58293a469d?auto=format&fit=crop&q=80&w=600" alt="Jerusalem" className="w-full h-full object-cover opacity-90" />
-      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg">
-        <MapPin className="text-gray-600"/>
-        <span className="text-xs font-bold text-gray-800">Jerusalem</span>
-      </div>
-    </div>
-);
+const SatelliteCard = ({ children, radius, angle, currentOrbit, speed = 1, opacity = 1, blur = 0 }: any) => {
+    const totalRotation = angle + (currentOrbit * speed);
+    return (
+        <div 
+            className="absolute inset-0 pointer-events-none flex items-center justify-center will-change-transform"
+            style={{ 
+                transform: `rotate(${totalRotation}deg)`,
+                transformStyle: 'preserve-3d',
+                opacity: opacity
+            }}
+        >
+            <div 
+                className="pointer-events-auto transition-transform duration-500 hover:scale-110"
+                style={{ 
+                    transform: `translateY(${-radius}px) rotate(${-totalRotation}deg)`,
+                    filter: blur > 0 ? `blur(${blur}px)` : 'none'
+                }}
+            >
+                {children}
+            </div>
+        </div>
+    );
+};
 
 // --- MAIN CONTENT COMPONENT ---
 
 const LandingContent: React.FC<LandingPageProps & { hasEntered: boolean }> = ({ onEnter, hasEntered }) => {
   const [scrollY, setScrollY] = useState(0);
+  const [mode, setMode] = useState<Mode>('JEWISH');
+  const [isMuted, setIsMuted] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const T = CONTENT[mode];
   
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    const handleScroll = () => {
+        setScrollY(window.scrollY);
+    };
+    window.addEventListener('resize', checkMobile);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', checkMobile);
+    };
   }, []);
+
+  const toggleMute = () => {
+      const nextMuted = !isMuted;
+      setIsMuted(nextMuted);
+      if (audioRef.current) {
+          if (nextMuted) {
+              audioRef.current.pause();
+          } else {
+              // Re-play explicitly to handle browser interaction requirement
+              audioRef.current.play().catch(e => console.log("Audio play blocked", e));
+          }
+      }
+  };
 
   const getProgress = (start: number, end: number) => {
     return Math.min(Math.max((scrollY - start) / (end - start), 0), 1);
   };
 
-  // Phase Calculations (Scroll triggers)
-  // EXTENDED SCROLL RANGES
-  const pStairs = getProgress(0, 10000); // Extended initial phase
-  const pText = getProgress(8000, 12000); 
-  const textOpacity = pText < 0.5 ? pText * 3 : 1 - ((pText - 0.5) * 3);
-  const textScale = 0.8 + (pText * 0.4);
+  const pStairs = getProgress(0, 10000); 
+  const heroOpacity = 1 - (pStairs * 1.5);
+  const heroY = pStairs * -200;
 
-  const pCards = getProgress(12000, 15000);
-  const flyIn = (val: number) => 1 - Math.min(val * 1.5, 1);
-  const cardsScale = 0.8 + (pCards * 0.2);
-  const cardsExit = getProgress(14500, 15000); 
-  const finalCardsOpacity = (pCards < 0.2 ? pCards * 5 : 1) * (1 - cardsExit);
+  const pNarrative = getProgress(8000, 15000);
+  const narrativeOpacity = pNarrative < 0.2 ? pNarrative * 5 : (pNarrative > 0.8 ? (1 - pNarrative) * 5 : 1);
+  const narrativeScale = 0.9 + (pNarrative * 0.1); 
+
+  const pCards = getProgress(10000, 14000);
+  const flyIn = (val: number) => 1 - Math.min(val * 1.5, 1); 
+
+  const pApp = getProgress(15000, 22000);
+  const appOpacity = pApp < 0.1 ? pApp * 10 : (pApp > 0.9 ? (1 - pApp) * 10 : 1);
   
-  const pPhone1 = getProgress(15000, 20000);
-  const bgOneAppOpacity = pPhone1 < 0.1 ? pPhone1 * 10 : (pPhone1 > 0.95 ? (1 - pPhone1) * 20 : 1);
-  
-  let phone1Y = 100; 
-  if (pPhone1 > 0 && pPhone1 <= 0.2) {
-      phone1Y = 100 - ((pPhone1 / 0.2) * 100); 
-  } else if (pPhone1 > 0.2 && pPhone1 <= 0.9) {
-      phone1Y = 0; 
-  } else if (pPhone1 > 0.9) {
-      phone1Y = -((pPhone1 - 0.9) / 0.1) * 50; 
+  let phoneY = 150; 
+  if (pApp > 0.1 && pApp <= 0.2) {
+      phoneY = 150 - ((pApp - 0.1) * 1500); 
+  } else if (pApp > 0.2 && pApp <= 0.8) {
+      phoneY = 0; 
+  } else if (pApp > 0.8) {
+      phoneY = -((pApp - 0.8) * 500); 
   }
-  
-  const phoneScreenIndex = pPhone1 < 0.33 ? 0 : pPhone1 < 0.66 ? 1 : 2;
 
-  const pConnect = getProgress(20000, 25000);
-  const bgConnectOpacity = pConnect < 0.1 ? pConnect * 10 : (pConnect > 0.95 ? (1 - pConnect) * 20 : 1);
-  const uiSpread = Math.min(pConnect * 2, 1) * 350; 
+  const screenIdx = pApp < 0.33 ? 0 : pApp < 0.66 ? 1 : 2;
 
-  const pSimple = getProgress(25000, 30000);
-  const bgSimpleOpacity = pSimple < 0.1 ? pSimple * 10 : (pSimple > 0.95 ? (1 - pSimple) * 20 : 1);
-  const textRevealWidth = Math.min(pSimple * 200, 100); 
-  const pPrivacy = getProgress(27000, 28500); 
+  const pConnect = getProgress(22000, 28000);
+  const connectOpacity = pConnect < 0.1 ? pConnect * 10 : (pConnect > 0.9 ? (1 - pConnect) * 10 : 1);
+  const orbitRotation = pConnect * 360;
 
-  const pAvodah = getProgress(30000, 35000);
-  const bgAvodahOpacity = pAvodah < 0.1 ? pAvodah * 10 : (pAvodah > 0.9 ? (1 - pAvodah) * 10 : 1);
-  const explode = (1 - Math.sin(pAvodah * Math.PI)) * 400; 
+  const pSimple = getProgress(28000, 34000);
+  const simpleOpacity = pSimple < 0.1 ? pSimple * 10 : (pSimple > 0.9 ? (1 - pSimple) * 10 : 1);
+  const textReveal = Math.min(pSimple * 150, 100);
 
-  const pAscend = getProgress(35000, 38000);
+  const pEverything = getProgress(34000, 40000);
+  const everythingOpacity = pEverything < 0.1 ? pEverything * 10 : (pEverything > 0.9 ? (1 - pEverything) * 10 : 1);
+
+  const pAscend = getProgress(40000, 42000);
+
+  const showFixedButton = scrollY > 300 && pAscend <= 0.5;
+
+  const nodes = [
+    { ...T.nodes[0], x: -280, y: -180, color: "bg-amber-100 text-amber-600", delay: 0 },
+    { ...T.nodes[1], x: 280, y: -120, color: "bg-indigo-100 text-indigo-600", delay: 100 },
+    { ...T.nodes[2], x: -280, y: 120, color: "bg-emerald-100 text-emerald-600", delay: 200 },
+    { ...T.nodes[3], x: 280, y: 180, color: "bg-stone-100 text-stone-600", delay: 300 }
+  ];
 
   return (
-    <div className={`font-sans selection:bg-purple-200 selection:text-purple-900 overflow-x-hidden transition-opacity duration-1000 ${hasEntered ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+    <div className={`font-sans selection:bg-amber-100 selection:text-amber-900 overflow-x-hidden transition-opacity duration-1000 ${hasEntered ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       
-      <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-8 flex justify-between items-center transition-all duration-300 mix-blend-difference text-white">
+      {/* Background Music */}
+      <audio 
+        ref={audioRef}
+        src="https://assets.mixkit.co/music/preview/mixkit-ethereal-meditation-149.mp3" 
+        loop 
+        autoPlay={false}
+      />
+
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 md:py-8 flex justify-between items-center transition-all duration-300 text-white mix-blend-difference">
         <div className="flex items-center gap-2">
-           <span className="font-display font-bold text-2xl tracking-tighter">King.do</span>
+           <span className="font-display font-bold text-lg md:text-xl tracking-[0.1em] md:tracking-[0.2em] uppercase">King.do</span>
         </div>
-        <div className="hidden md:flex items-center gap-6">
-           <div className="flex items-center gap-2 font-medium text-sm px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md cursor-pointer">
-              <Globe size={16} />
-              <span>EN</span>
-              <ChevronRight className="rotate-90" />
-           </div>
-           <button onClick={onEnter} className="bg-white text-stone-900 px-6 py-2.5 rounded-[1rem] font-bold text-sm shadow-lg hover:scale-105 transition-transform">
-             Enter Kingdom
+        
+        {/* MODE SWITCHER - ALIGNED LEFT ON MOBILE */}
+        <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/20 z-50 shadow-lg">
+            {['Noahide', 'Jewish', 'Seeking'].map((m) => (
+              <button 
+                key={m}
+                onClick={() => {
+                    setMode(m.toUpperCase() as Mode);
+                    // Force audio play on interaction if desired but keep it silent by default
+                }}
+                className={`px-2 md:px-3 py-1.5 md:py-1 text-[8px] md:text-[10px] font-bold uppercase tracking-widest rounded-full transition-all ${mode === m.toUpperCase() ? 'bg-white text-black shadow-sm scale-105' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
+              >
+                {m}
+              </button>
+            ))}
+        </div>
+
+        <div className="flex items-center gap-2 md:gap-6">
+           <button 
+                onClick={toggleMute} 
+                className="w-10 h-10 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all"
+            >
+                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} className="animate-pulse" />}
+           </button>
+           <button onClick={() => {
+               if (audioRef.current && !isMuted) audioRef.current.play();
+               onEnter();
+           }} className="hidden md:block bg-white text-black px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-transform">
+             Enter
            </button>
         </div>
       </nav>
 
       <div className="fixed top-0 left-0 w-full h-screen overflow-hidden">
         
-        {/* Layer 1: Hero - TRANSPARENT to show 3D BG */}
-        <div style={{ opacity: pAscend > 0.1 ? 0 : 1, transition: 'opacity 0.5s' }}>
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                 <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-white via-white/10 to-transparent opacity-40 animate-pulse-slow" />
-            </div>
-        </div>
-
-        {/* Hero Title - Polished Typography */}
+        {/* --- LAYER 1: HERO --- */}
         <div 
             className="absolute inset-0 flex flex-col items-center justify-center text-center z-40 pointer-events-none pb-20"
-            style={{ opacity: 1 - (pStairs * 1.5), transform: `translateY(${pStairs * -150}px)` }}
+            style={{ opacity: heroOpacity, transform: `translateY(${heroY}px)` }}
         >
-            <div className="absolute top-[30%] left-[-50%] w-[150%] h-32 bg-white/40 blur-3xl animate-[slideInRight_20s_linear_infinite] pointer-events-none mix-blend-overlay z-50" />
-            
-            <div className="relative mb-8">
-                <span className="block text-sm md:text-xl font-display text-white/80 tracking-[0.5em] uppercase mb-4 opacity-90 drop-shadow-lg">The Path of Ascent</span>
+            <div className="relative mb-12 flex flex-col items-center px-4">
+                <span className="block text-[10px] md:text-sm font-display text-amber-200/80 tracking-[0.4em] md:tracking-[0.8em] uppercase mb-6 animate-[fadeIn_2s_ease-out] drop-shadow-md">The Path of Ascent</span>
                 
                 <h1 className="relative flex flex-col items-center justify-center text-center z-40 drop-shadow-2xl">
-                    <span className="text-7xl md:text-[10rem] font-display font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/80 drop-shadow-xl py-2">
+                    <span className="text-5xl md:text-[8rem] font-display font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-white to-amber-200 drop-shadow-[0_0_40px_rgba(251,191,36,0.3)] py-2 px-4">
                         KINGDOM
                     </span>
-                    <span className="text-6xl md:text-[9rem] font-display font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-b from-white/90 to-white/50 drop-shadow-xl -mt-4 md:-mt-8">
+                    <span className="text-3xl md:text-[6rem] font-display font-bold tracking-tighter leading-none text-white/90 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] -mt-1 md:-mt-6">
                         OF HEAVEN
                     </span>
                 </h1>
+                
+                <div className="font-serif text-amber-100/60 text-base md:text-xl mt-6 tracking-widest drop-shadow-md animate-[fadeIn_2s_ease-out_1.5s_forwards] opacity-0 transition-all">
+                    {T.subtitle}
+                </div>
             </div>
 
-            <div className="mt-12 animate-bounce opacity-80 z-40 text-white flex flex-col items-center gap-2">
-                <span className="text-[10px] uppercase tracking-widest opacity-70">Begin Ascent</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            <div className="absolute bottom-12 flex flex-col items-center gap-3 animate-pulse-slow">
+                <div className="w-px h-16 bg-gradient-to-b from-transparent via-amber-200/50 to-transparent"></div>
+                <div className="p-3 rounded-full border border-amber-200/20 bg-amber-900/10 backdrop-blur-sm">
+                    <Compass className="text-amber-200 w-6 h-6 animate-[spin_10s_linear_infinite]" />
+                </div>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-amber-100/70 font-bold drop-shadow-md">Begin Ascent</span>
             </div>
         </div>
 
-        {/* Layer 2: White Overlay */}
+        {/* --- LAYER 2: NARRATIVE --- */}
         <div 
-            className="absolute inset-0 bg-white flex items-center justify-center pointer-events-none transition-opacity duration-500"
-            style={{ opacity: pText > 0.1 && pPhone1 < 0.1 ? 1 : 0 }}
+            className="absolute inset-0 bg-[#F5F2EA] flex items-center justify-center pointer-events-none transition-opacity duration-300"
+            style={{ opacity: narrativeOpacity }}
         >
-             <div className="absolute text-center px-6" style={{ opacity: textOpacity, transform: `scale(${textScale})` }}>
-                  <h2 className="text-stone-900 text-6xl md:text-9xl font-display font-bold tracking-tighter leading-none mb-4">
-                      "Build me a<br/>Sanctuary"
+             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')] opacity-30 mix-blend-multiply"></div>
+             
+             <div className="absolute text-center px-6 max-w-5xl" style={{ transform: `scale(${narrativeScale})` }}>
+                  <h2 className="text-[#2C2924] text-4xl md:text-8xl font-display font-bold tracking-tighter leading-[0.9] mb-8 drop-shadow-sm transition-all duration-500">
+                      {T.quoteText}
                   </h2>
-                  <p className="font-serif italic text-3xl text-stone-400 mt-6">Exodus 25:8</p>
+                  <div className="w-16 md:w-24 h-1 bg-[#2C2924] mx-auto mb-8"></div>
+                  <p className="font-serif italic text-xl md:text-3xl text-stone-600">{T.quoteSource}</p>
              </div>
              
-             <div className="absolute inset-0 flex items-center justify-center" style={{ opacity: finalCardsOpacity, transform: `scale(${cardsScale})`, display: pCards <= 0 ? 'none' : 'flex' }}>
-                 <div className="relative w-[800px] h-[600px]">
-                    <TealCard style={{ top: '20%', left: '10%', transform: `translate3d(${-400 * flyIn(pCards)}px, ${200 * flyIn(pCards)}px, 0)` }} />
-                    <AmberCard style={{ top: '10%', right: '15%', transform: `translate3d(${400 * flyIn(pCards)}px, ${-200 * flyIn(pCards)}px, 0)` }} />
-                    <PhotoCard style={{ bottom: '15%', right: '10%', transform: `translate3d(${400 * flyIn(pCards)}px, ${400 * flyIn(pCards)}px, 0)` }} />
+             <div className="absolute inset-0 flex items-center justify-center" style={{ display: pCards <= 0 ? 'none' : 'flex' }}>
+                 <div className="relative w-full h-full max-w-6xl">
+                    <StoneTablet 
+                        title={T.tablet1.title} 
+                        subtitle={T.tablet1.sub} 
+                        icon={T.tablet1.iconType === 'Compass' ? <Compass className="text-xl text-stone-600" /> : <Hammer className="text-xl text-stone-600" />}
+                        style={{ top: '25%', left: '15%', transform: `translate3d(${-100 * flyIn(pCards)}px, ${100 * flyIn(pCards)}px, 0) rotate(-5deg)` }} 
+                    />
+                    <StoneTablet 
+                        title={T.tablet2.title} 
+                        subtitle={T.tablet2.sub} 
+                        icon={<BookOpen className="text-xl text-stone-600" />}
+                        style={{ bottom: '25%', right: '15%', transform: `translate3d(${100 * flyIn(pCards)}px, ${-100 * flyIn(pCards)}px, 0) rotate(5deg)` }} 
+                    />
+                    <GlassArtifact 
+                        value="12" 
+                        label="Streak Days" 
+                        variant="dark" 
+                        style={{ top: '20%', right: '25%', transform: `translate3d(${50 * flyIn(pCards)}px, ${-200 * flyIn(pCards)}px, 0) scale(0.8)` }} 
+                    />
                  </div>
              </div>
         </div>
 
-        {/* Layer 3: One App */}
+        {/* --- LAYER 3: APP SHOWCASE --- */}
         <div 
-            className="absolute inset-0 bg-orange-500 flex flex-col items-center justify-center transition-opacity duration-300"
-            style={{ opacity: bgOneAppOpacity, pointerEvents: bgOneAppOpacity > 0 ? 'auto' : 'none' }}
+            className="absolute inset-0 bg-gradient-to-b from-[#0F172A] to-[#1e293b] flex flex-col items-center justify-center transition-opacity duration-300"
+            style={{ opacity: appOpacity, pointerEvents: appOpacity > 0.1 ? 'auto' : 'none' }}
         >
-             <div className="absolute top-[15%] w-full text-center z-10 px-4">
-                 <h2 className="text-white text-6xl md:text-8xl font-display font-bold tracking-tight mb-2">One App.</h2>
-                 <p className="text-orange-50 font-serif italic text-2xl opacity-90">For all your spiritual needs.</p>
+             <div className="absolute top-[12%] w-full text-center z-10 px-4">
+                 <h2 className="text-white text-5xl md:text-8xl font-display font-bold tracking-tight mb-4 drop-shadow-lg">One App.</h2>
+                 <p className="text-indigo-200 font-serif italic text-xl md:text-2xl opacity-90">{T.appSub}</p>
                  
-                 <div className="flex gap-3 justify-center mt-8">
+                 <div className="flex gap-4 justify-center mt-8">
                      {[0,1,2].map(i => (
-                         <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${phoneScreenIndex === i ? 'bg-white w-12' : 'bg-white/20 w-3'}`} />
+                         <div key={i} className={`h-1 transition-all duration-500 rounded-full ${screenIdx === i ? 'bg-white w-12 shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/10 w-4'}`} />
                      ))}
                  </div>
              </div>
              
-             <div className="absolute top-[40%] transform -translate-y-[10%]" style={{ transform: `translateY(${phone1Y}px)` }}>
+             <div className="absolute top-[35%]" style={{ transform: `translateY(${phoneY}px)` }}>
                 <PhoneMockup>
-                    <div className="h-full bg-stone-50 flex flex-col p-4 relative">
-                        <div className={`absolute inset-0 p-4 transition-opacity duration-500 flex flex-col ${phoneScreenIndex === 0 ? 'opacity-100' : 'opacity-0'}`}>
-                            <div className="bg-white p-4 rounded-xl shadow-sm mb-4">
-                                <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">Today</div>
-                                <div className="font-display text-xl font-bold text-orange-600">My Avodah</div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="h-12 bg-white rounded-lg border border-stone-100 flex items-center px-3 gap-3">
-                                    <div className="w-5 h-5 rounded-full border-2 border-orange-500 bg-orange-500 text-white flex items-center justify-center text-[10px]">✓</div>
-                                    <div className="w-32 h-2 bg-stone-200 rounded"></div>
+                    {/* Screen 1 */}
+                    <div className={`absolute inset-0 bg-stone-50 flex flex-col transition-opacity duration-500 ${screenIdx === 0 ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className="p-6 pt-12 bg-white rounded-b-3xl shadow-sm z-10">
+                            <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">Today's Mission</div>
+                            <div className="font-display text-2xl font-bold text-stone-900">{T.phone1.title}</div>
+                        </div>
+                        <div className="p-6 space-y-3">
+                            {[1,2,3].map(i => (
+                                <div key={i} className="h-16 bg-white rounded-2xl border border-stone-100 shadow-sm flex items-center px-4 gap-4">
+                                    <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center ${i === 1 ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-stone-200'}`}>
+                                        {i === 1 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4"><polyline points="20 6 9 17 4 12"/></svg>}
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="w-32 h-2.5 bg-stone-800 rounded mb-1.5 opacity-80"></div>
+                                        <div className="w-20 h-2 bg-stone-200 rounded"></div>
+                                    </div>
                                 </div>
-                                <div className="h-12 bg-white rounded-lg border border-stone-100 flex items-center px-3 gap-3">
-                                    <div className="w-5 h-5 rounded-full border-2 border-stone-200"></div>
-                                    <div className="w-24 h-2 bg-stone-200 rounded"></div>
-                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Screen 2 */}
+                    <div className={`absolute inset-0 bg-[#FDFBF7] flex flex-col transition-opacity duration-500 ${screenIdx === 1 ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className="p-6 pt-12 flex justify-between items-end border-b border-stone-200">
+                             <div>
+                                <div className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-1">Library</div>
+                                <div className="font-display text-2xl font-bold text-stone-900">{T.phone2.title}</div>
+                             </div>
+                             <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 text-xs font-bold">{T.phone2.chapter}</div>
+                        </div>
+                        <div className="p-8 font-serif text-lg leading-relaxed text-stone-700">
+                            <p className="mb-4">{T.phone2.text}</p>
+                            <p className="text-stone-400 text-sm">Chapter 1</p>
+                        </div>
+                        <div className="mt-auto bg-white p-4 m-4 rounded-2xl border border-stone-100 shadow-lg flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                             </div>
+                            <div className="font-bold text-sm text-stone-600">Resume Audio</div>
                         </div>
+                    </div>
 
-                        <div className={`absolute inset-0 p-4 transition-opacity duration-500 flex flex-col bg-stone-50 ${phoneScreenIndex === 1 ? 'opacity-100' : 'opacity-0'}`}>
-                             <div className="flex justify-between items-center mb-4">
-                                 <h3 className="font-display font-bold text-stone-900">Library</h3>
-                                 <div className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">Reading</div>
-                             </div>
-                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 flex-1">
-                                 <div className="font-display text-lg text-amber-600 mb-2">Tanya: Ch. 41</div>
-                                 <div className="space-y-3">
-                                     <div className="w-full h-2 bg-stone-100 rounded"></div>
-                                     <div className="w-full h-2 bg-stone-100 rounded"></div>
-                                     <div className="w-2/3 h-2 bg-stone-100 rounded"></div>
-                                 </div>
-                             </div>
-                        </div>
-
-                        <div className={`absolute inset-0 p-4 transition-opacity duration-500 flex flex-col bg-stone-50 ${phoneScreenIndex === 2 ? 'opacity-100' : 'opacity-0'}`}>
-                             <div className="flex items-center gap-3 mb-6 border-b border-stone-200 pb-2">
-                                 <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">K</div>
-                                 <h3 className="font-bold text-sm">King AI</h3>
-                             </div>
-                             <div className="space-y-4">
-                                 <div className="bg-white p-3 rounded-tr-none rounded-2xl shadow-sm text-xs self-end ml-8">
-                                     How do I increase my joy?
-                                 </div>
-                                 <div className="bg-purple-600 text-white p-3 rounded-tl-none rounded-2xl shadow-sm text-xs mr-8">
-                                     Joy comes from purpose. Focus on gratitude.
-                                 </div>
-                             </div>
-                        </div>
+                    {/* Screen 3 */}
+                    <div className={`absolute inset-0 bg-stone-900 flex flex-col items-center justify-center transition-opacity duration-500 text-white ${screenIdx === 2 ? 'opacity-100' : 'opacity-0'}`}>
+                         <div className="w-24 h-24 rounded-full border-4 border-white/20 flex items-center justify-center text-4xl font-display mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)]">{T.phone3.name.charAt(0)}</div>
+                         <div className="font-display text-3xl font-bold mb-2">{T.phone3.name}</div>
+                         <div className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-8">Level 7 Builder</div>
                     </div>
                 </PhoneMockup>
              </div>
         </div>
 
-        {/* Layer 4: Connect */}
+        {/* --- LAYER 4: CONNECT (REVOLVING UNIVERSE) --- */}
         <div 
-            className="absolute inset-0 bg-gradient-to-br from-[#F3E8FF] via-[#FFFBEB] to-[#F0FDFA] flex items-center justify-center perspective-1000"
-            style={{ opacity: bgConnectOpacity, pointerEvents: bgConnectOpacity > 0 ? 'auto' : 'none' }}
+            className="absolute inset-0 bg-black flex items-center justify-center perspective-1000 overflow-hidden"
+            style={{ opacity: connectOpacity, pointerEvents: connectOpacity > 0.1 ? 'auto' : 'none' }}
         >
-             <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-[800px] h-[800px] border border-purple-200 rounded-full opacity-30 animate-spin-slow"></div>
-                 <div className="absolute w-[600px] h-[600px] border border-amber-200 rounded-full opacity-30 animate-reverse-spin"></div>
+             <div className="absolute inset-0 opacity-50">
+                 {[...Array(150)].map((_, i) => (
+                     <div key={i} className="absolute bg-white rounded-full" style={{
+                         top: `${Math.random() * 100}%`,
+                         left: `${Math.random() * 100}%`,
+                         width: `${Math.random() * 2}px`,
+                         height: `${Math.random() * 2}px`,
+                         opacity: Math.random()
+                     }}></div>
+                 ))}
              </div>
 
-             <div className="absolute top-[15%] w-full text-center z-10 px-4">
-                 <h2 className="text-6xl md:text-8xl font-display font-bold text-stone-900 leading-none">
-                     Connect<span className="text-purple-600">.</span>
+             <div className="absolute top-[8%] w-full text-center z-40 px-4">
+                 <h2 className="text-5xl md:text-[7rem] font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-200 leading-none drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                     Universe
                  </h2>
-                 <p className="font-serif italic text-2xl text-stone-500 mt-4">Deeply rooted in community.</p>
+                 <p className="font-serif italic text-lg md:text-2xl text-stone-400 mt-4 px-8">Everything revolves around you.</p>
              </div>
                  
-             <div className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-[10%] w-[300px] h-[500px] preserve-3d flex items-center justify-center">
-                 
-                 <div 
-                    className="absolute bg-white p-5 rounded-3xl shadow-xl border border-stone-100 w-56 -left-20"
-                    style={{ 
-                        transform: `translateX(${-uiSpread}px) translateZ(20px)`,
-                        opacity: Math.min(pConnect * 3, 1)
-                    }}
-                 >
-                     <div className="flex items-center gap-3 mb-4">
-                         <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 text-lg">📅</div>
-                         <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Upcoming</div>
-                     </div>
-                     <div className="font-display font-bold text-stone-900 text-lg leading-tight mb-1">Grand Farbrengen</div>
-                     <div className="text-xs text-stone-400 font-serif">Tonight • 8:00 PM</div>
+             <div className="relative w-full h-full flex items-center justify-center overflow-visible">
+                 {/* Solar Center */}
+                 <div className="absolute z-30">
+                    <div className="w-[180px] h-[180px] md:w-[200px] md:h-[200px] rounded-full flex items-center justify-center relative">
+                        {mode === 'SEEKING' ? (
+                            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full shadow-[0_0_80px_#fff,0_0_120px_rgba(255,255,255,0.6)] animate-pulse"></div>
+                        ) : (
+                            <div className="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden border-2 border-blue-500/30 shadow-[0_0_60px_rgba(59,130,246,0.4)] relative">
+                                <div className="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png')] bg-cover bg-center animate-[spin_120s_linear_infinite]"></div>
+                                <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent"></div>
+                            </div>
+                        )}
+                    </div>
                  </div>
 
-                 <div 
-                    className="absolute bg-white p-5 rounded-3xl shadow-xl border border-stone-100 w-56 -right-20"
-                    style={{ 
-                        transform: `translateX(${uiSpread}px) translateZ(20px)`,
-                        opacity: Math.min(pConnect * 3, 1)
-                    }}
-                 >
-                     <div className="flex items-center gap-3 mb-4">
-                         <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-lg">💼</div>
-                         <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Opportunity</div>
+                 {/* Orbital Rings - Visual Guides */}
+                 <div className="absolute w-[300px] h-[300px] md:w-[350px] md:h-[350px] border border-white/10 rounded-full"></div>
+                 <div className="absolute w-[450px] h-[450px] md:w-[550px] md:h-[550px] border border-white/5 rounded-full"></div>
+
+                 {/* Ring 1: MOON - ENHANCED */}
+                 <div className="absolute w-[300px] h-[300px] md:w-[350px] md:h-[350px] animate-[spin_15s_linear_infinite]">
+                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 md:-mt-6 w-8 h-8 md:w-12 md:h-12 bg-stone-300 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.3)] border border-stone-400/50 flex items-center justify-center overflow-hidden">
+                        <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')]"></div>
+                        <div className="w-full h-full bg-gradient-to-br from-white/20 to-black/20"></div>
                      </div>
-                     <div className="font-display font-bold text-stone-900 text-lg leading-tight mb-1">React Developer</div>
-                     <div className="text-xs text-stone-400 font-serif">Torah Tech • Remote</div>
                  </div>
 
-                 <PhoneMockup className="shadow-2xl shadow-purple-200/50 z-10">
-                     <div className="h-full bg-stone-50 flex flex-col p-4 relative overflow-hidden">
-                         <div className="flex justify-between items-center mb-4 pb-2 border-b border-stone-200">
-                             <div className="font-bold text-stone-800">Kehilla Feed</div>
-                             <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                <Globe size={16} />
-                             </div>
-                         </div>
-                         
-                         <div className="space-y-4 flex-1 overflow-hidden relative">
-                             <div className="bg-white p-3 rounded-xl shadow-sm border border-stone-100">
-                                 <div className="flex items-center gap-2 mb-2">
-                                     <div className="w-8 h-8 rounded-full bg-stone-200"></div>
-                                     <div>
-                                         <div className="h-2 w-20 bg-stone-800 rounded mb-1"></div>
-                                         <div className="h-1.5 w-12 bg-stone-300 rounded"></div>
-                                     </div>
-                                 </div>
-                                 <div className="h-16 w-full bg-stone-100 rounded-lg mb-2"></div>
-                                 <div className="flex gap-2">
-                                     <div className="h-4 w-4 rounded-full bg-red-100"></div>
-                                     <div className="h-2 w-32 bg-stone-200 rounded mt-1"></div>
-                                 </div>
-                             </div>
-
-                             <div className="bg-white p-3 rounded-xl shadow-sm border border-stone-100">
-                                 <div className="flex items-center gap-2 mb-2">
-                                     <div className="w-8 h-8 rounded-full bg-stone-200"></div>
-                                     <div>
-                                         <div className="h-2 w-24 bg-stone-800 rounded mb-1"></div>
-                                         <div className="h-1.5 w-16 bg-stone-300 rounded"></div>
-                                     </div>
-                                 </div>
-                                 <div className="space-y-1 mb-2">
-                                     <div className="h-2 w-full bg-stone-200 rounded"></div>
-                                     <div className="h-2 w-2/3 bg-stone-200 rounded"></div>
-                                 </div>
-                             </div>
-                             
-                             <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-stone-50 to-transparent"></div>
-                         </div>
-                         
-                         <div className="mt-auto h-12 bg-white rounded-2xl flex items-center justify-around text-stone-300">
-                             <div className="w-6 h-6 rounded bg-purple-500"></div>
-                             <div className="w-6 h-6 rounded bg-stone-200"></div>
-                             <div className="w-6 h-6 rounded bg-stone-200"></div>
-                         </div>
+                 {/* Ring 2: SUN - ENHANCED */}
+                 <div className="absolute w-[450px] h-[450px] md:w-[550px] md:h-[550px] animate-[spin_40s_linear_infinite_reverse]">
+                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-8 md:-mb-10 w-12 h-12 md:w-20 md:h-20 bg-amber-400 rounded-full shadow-[0_0_60px_rgba(251,191,36,0.9),0_0_120px_rgba(251,191,36,0.4)] border-2 border-amber-300 relative overflow-visible">
+                        <div className="absolute inset-0 bg-white/30 animate-pulse rounded-full"></div>
                      </div>
-                 </PhoneMockup>
+                 </div>
+
+                 {/* MODE SPECIFIC SATELLITE CARDS */}
+                 {T.orbit?.map((card, i) => (
+                    <SatelliteCard 
+                        key={`${mode}-${i}`}
+                        radius={card.radiusMultiplier * (isMobile ? 180 : 400)} 
+                        angle={card.angle} 
+                        currentOrbit={orbitRotation} 
+                        speed={card.speed}
+                        opacity={card.opacity}
+                        blur={card.blur}
+                    >
+                        <div className={`w-32 md:w-44 bg-white/10 backdrop-blur-xl p-2 md:p-3 rounded-2xl border border-white/20 text-white shadow-2xl flex items-center gap-2 md:gap-3`}>
+                             <div className={`w-7 h-7 md:w-10 md:h-10 rounded-full border border-white/30 flex items-center justify-center font-bold text-[10px] md:text-xs bg-${card.color}-500/20 text-${card.color}-400`}>
+                                 {card.type.charAt(0)}
+                             </div>
+                             <div className="overflow-hidden">
+                                 <div className="font-display font-bold text-[9px] md:text-sm leading-none mb-1 truncate">{card.title}</div>
+                                 <div className={`text-[7px] md:text-[10px] text-${card.color}-400 uppercase font-bold truncate`}>{card.sub}</div>
+                             </div>
+                        </div>
+                    </SatelliteCard>
+                 ))}
              </div>
         </div>
 
-        {/* Layer 5: Simplicity */}
+        {/* --- LAYER 5: SIMPLICITY --- */}
         <div 
-            className="absolute inset-0 bg-[#0F172A] flex items-center justify-center text-white"
-            style={{ opacity: bgSimpleOpacity, pointerEvents: bgSimpleOpacity > 0 ? 'auto' : 'none' }}
+            className="absolute inset-0 bg-[#0A0A0A] flex items-center justify-center text-white"
+            style={{ opacity: simpleOpacity, pointerEvents: simpleOpacity > 0.1 ? 'auto' : 'none' }}
         >
-             <div className="max-w-5xl w-full h-full flex flex-col md:flex-row items-center justify-start md:justify-center gap-8 md:gap-20 px-8 pt-28 md:pt-0">
-                 <div className="flex-1 text-center md:text-left shrink-0">
-                     <div className="flex items-center justify-center md:justify-start gap-3 text-teal-400 mb-4 md:mb-8">
-                         <Zap size={24} />
-                         <span className="text-sm font-bold uppercase tracking-widest">Minimalism</span>
+             <div className="max-w-7xl w-full h-full flex flex-col md:flex-row items-center justify-center gap-12 px-8">
+                 <div className="flex-1 text-center md:text-left">
+                     <div className="flex items-center justify-center md:justify-start gap-3 text-emerald-500 mb-6">
+                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                         <span className="text-xs font-bold uppercase tracking-[0.2em]">Encrypted</span>
                      </div>
-                     <div className="relative overflow-hidden mb-4 md:mb-8">
-                         <h2 className="text-5xl md:text-7xl font-display font-bold leading-none text-white/10">Divine<br/>Simplicity</h2>
+                     <div className="relative overflow-hidden mb-8">
                          <h2 
-                            className="text-5xl md:text-7xl font-display font-bold leading-none absolute top-0 left-0 text-white whitespace-nowrap overflow-hidden transition-all duration-75"
-                            style={{ width: `${textRevealWidth}%` }}
+                            className="text-5xl md:text-9xl font-display font-bold leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-600 whitespace-nowrap"
+                            style={{ clipPath: `polygon(0 0, ${textReveal}% 0, ${textReveal}% 100%, 0 100%)` }}
                          >
                              Divine<br/>Simplicity
                          </h2>
                      </div>
-                     <p className="text-stone-400 font-serif text-lg md:text-2xl max-w-sm mx-auto md:mx-0 leading-relaxed">Strip away the noise. Focus on the connection.</p>
+                     <p className="text-stone-500 font-serif text-lg md:text-2xl max-w-lg leading-relaxed">
+                         The holiest place was the empty space. We strip away the noise so you can focus on the connection.
+                     </p>
                  </div>
                  
-                 <div className="flex-1 relative w-full flex justify-center scale-75 md:scale-100 origin-top">
-                     <div className="relative w-[300px] h-[600px] border border-teal-500/30 rounded-[3rem] p-4 flex flex-col gap-4">
-                         <div className="absolute inset-0 bg-teal-500/5 rounded-[3rem]" style={{ clipPath: `inset(0 ${100 - textRevealWidth}% 0 0)` }}></div>
-                         
-                         <div className="h-32 rounded-xl border border-teal-500/50" style={{ transform: `translateX(${100 - textRevealWidth}px)`, opacity: textRevealWidth/100 }}></div>
-                         <div className="flex-1 rounded-xl border border-teal-500/30" style={{ transform: `translateX(${-100 + textRevealWidth}px)`, opacity: textRevealWidth/100 }}></div>
-                         
-                         <div 
-                            className="absolute inset-0 bg-[#0F172A]/90 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-8 rounded-[3rem] border border-teal-500/50 transition-opacity duration-700"
-                            style={{ opacity: pPrivacy > 0.1 ? 1 : 0 }}
-                         >
-                             <div className="w-24 h-24 rounded-full bg-teal-500/10 flex items-center justify-center text-teal-400 mb-8 animate-pulse">
-                                 <Shield size={48} />
-                             </div>
-                             <h3 className="text-3xl font-display font-bold mb-3 text-white">Sacred Privacy</h3>
-                             <p className="text-base text-stone-400 mb-8 leading-relaxed">Your spiritual data is encrypted. We do not sell your soul.</p>
-                             <div className="flex gap-2 text-[10px] font-bold uppercase tracking-widest text-teal-400">
-                                 <div className="bg-teal-950/50 px-4 py-2 rounded-full border border-teal-900 flex items-center gap-2"><Lock size={12}/> AES-256</div>
-                             </div>
+                 <div className="flex-1 flex justify-center">
+                     <div className="relative w-[280px] md:w-[300px] h-[360px] md:h-[400px] bg-gradient-to-br from-stone-800 to-black rounded-[3rem] border border-stone-800 shadow-2xl flex flex-col items-center justify-center p-8 text-center group hover:border-emerald-500/30 transition-colors">
+                         <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-black border border-stone-800 flex items-center justify-center mb-8 shadow-inner group-hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-shadow duration-500">
+                             <Lock size={48} className="text-stone-600 group-hover:text-emerald-500 transition-colors" />
+                         </div>
+                         <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-2">Sacred Privacy</h3>
+                         <p className="text-xs md:text-sm text-stone-500 mb-6">Your spiritual data is sealed. We do not sell your soul.</p>
+                         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-950/30 px-4 py-2 rounded-full border border-emerald-900">
+                             AES-256 Encrypted
                          </div>
                      </div>
                  </div>
              </div>
         </div>
 
-        {/* Layer 6: Everything in one place */}
+        {/* --- LAYER 6: EVERYTHING --- */}
         <div 
-            className="absolute inset-0 bg-[#FDFBF7] flex items-center justify-center"
-            style={{ opacity: bgAvodahOpacity, pointerEvents: bgAvodahOpacity > 0 ? 'auto' : 'none' }}
+            className="absolute inset-0 bg-[#FDFBF7] flex flex-col items-center justify-center overflow-hidden"
+            style={{ opacity: everythingOpacity, pointerEvents: everythingOpacity > 0.1 ? 'auto' : 'none' }}
         >
-             <div className="relative w-full h-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-start md:justify-between px-8 pt-28 md:pt-0">
+             <div className="absolute inset-0 flex items-center justify-center z-10 select-none overflow-hidden">
+                 <h1 className="text-[8rem] md:text-[20rem] font-display font-bold text-stone-900/5 whitespace-nowrap tracking-tighter leading-none transform -translate-y-8">
+                     EVERYTHING.
+                 </h1>
+             </div>
+
+             <div className="relative z-30 flex flex-col items-center mb-8">
+                 <div className="bg-white/50 backdrop-blur-sm border border-stone-200 px-4 py-1.5 rounded-full shadow-sm mb-4">
+                    <span className="font-serif italic text-base md:text-lg text-stone-500">Unified in one vessel.</span>
+                 </div>
+             </div>
+
+             <div className="relative w-full max-w-7xl h-[800px] flex items-center justify-center z-20">
                  
-                 <div 
-                    className="z-10 transition-all duration-500 text-center md:text-left md:flex-1 md:max-w-md mb-8 md:mb-0 shrink-0"
-                    style={{ 
-                        opacity: 0.8 + (1 - (explode/500)) * 0.2, 
-                        transform: `translateX(${-explode/20}px)` 
-                    }}
-                 >
-                     <h2 className="text-6xl md:text-8xl font-display font-bold text-stone-900 mb-4 md:mb-6 leading-none">Everything</h2>
-                     <p className="text-2xl md:text-4xl font-serif italic text-stone-500 leading-tight">In one place.</p>
-                     <p className="hidden md:block mt-8 text-stone-400 font-serif max-w-xs">Study, prayer, charity, and community. Unified in a single vessel.</p>
+                 <PhoneMockup className="z-30 bg-stone-50 border-stone-200 shadow-2xl scale-[0.7] md:scale-100 transition-transform">
+                    <div className="h-full flex flex-col bg-stone-50 overflow-hidden relative">
+                        <div className="px-6 pt-5 pb-2 flex justify-between items-center text-[10px] font-bold text-stone-900">
+                            <span>12:00</span>
+                            <div className="flex gap-1.5">
+                                <div className="w-4 h-2.5 rounded-sm border border-stone-300"></div>
+                                <div className="w-0.5 h-2.5 bg-stone-300 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div className="px-6 py-4 flex justify-between items-center bg-white/50 backdrop-blur-sm sticky top-0 z-20">
+                            <span className="font-display font-bold text-lg">King.do</span>
+                            <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-[10px] font-bold">D</div>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto px-4 pb-8 space-y-4 no-scrollbar">
+                             <div className="bg-stone-900 text-white p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                                 <div className="relative z-10">
+                                     <div className="flex justify-between items-start mb-3">
+                                         <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Next Action</span>
+                                         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                     </div>
+                                     <h3 className="font-display text-xl font-bold mb-1">{T.feed.heroTitle}</h3>
+                                     <p className="text-xs text-stone-400 font-serif mb-4">{T.feed.heroSub}</p>
+                                     <div className="h-1 w-full bg-white/20 rounded-full overflow-hidden">
+                                         <div className="h-full bg-white w-2/3"></div>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div className="flex gap-3">
+                                 <div className="flex-1 bg-white p-3 rounded-2xl border border-stone-100 shadow-sm flex flex-col items-center justify-center gap-1">
+                                     <div className="text-2xl text-amber-500">★</div>
+                                     <span className="text-[10px] font-bold text-stone-400 uppercase">12 Day</span>
+                                 </div>
+                                 <div className="flex-1 bg-white p-3 rounded-2xl border border-stone-100 shadow-sm flex flex-col items-center justify-center gap-1">
+                                     <div className="text-2xl text-amber-500">★</div>
+                                     <span className="text-[10px] font-bold text-stone-400 uppercase">Level 7</span>
+                                 </div>
+                             </div>
+
+                             <div className="space-y-2">
+                                 <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Today's Missions</div>
+                                 
+                                 <div className="bg-white p-3 rounded-xl border border-stone-100 shadow-sm flex items-center gap-3">
+                                     <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shadow-inner font-bold">$</div>
+                                     <div className="flex-1">
+                                         <div className="text-xs font-bold text-stone-800">{T.feed.item1Title}</div>
+                                         <div className="text-[10px] text-stone-400">{T.feed.item1Sub}</div>
+                                     </div>
+                                     <div className="w-5 h-5 rounded-full border border-stone-200"></div>
+                                 </div>
+
+                                 <div className="bg-white p-3 rounded-xl border border-stone-100 shadow-sm flex items-center gap-3">
+                                     <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner font-bold">W</div>
+                                     <div className="flex-1">
+                                         <div className="text-xs font-bold text-stone-800">{T.feed.item2Title}</div>
+                                         <div className="text-[10px] text-stone-400">{T.feed.item2Sub}</div>
+                                     </div>
+                                     <Check className="w-5 h-5 text-indigo-600" />
+                                 </div>
+                             </div>
+                        </div>
+
+                        <div className="h-16 bg-white border-t border-stone-100 flex justify-around items-center px-2">
+                            {[1,2,3,4].map(i => (
+                                <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center ${i===1 ? 'text-stone-900' : 'text-stone-300'}`}>
+                                    <div className="w-5 h-5 rounded-md bg-current opacity-20"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                 </PhoneMockup>
+
+                 <div className="absolute inset-0 pointer-events-none z-20 overflow-visible">
+                     <svg className="w-full h-full overflow-visible">
+                         <defs>
+                             <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                 <stop offset="0%" stopColor="#e5e7eb" stopOpacity="0" />
+                                 <stop offset="50%" stopColor="#d6d3d1" stopOpacity="1" />
+                                 <stop offset="100%" stopColor="#e5e7eb" stopOpacity="0" />
+                             </linearGradient>
+                         </defs>
+                         {nodes.map((node, i) => {
+                             const d = `M ${window.innerWidth/2 + node.x} ${400 + node.y} C ${window.innerWidth/2 + node.x*0.5} ${400 + node.y}, ${window.innerWidth/2 + node.x*0.5} 400, ${window.innerWidth/2} 400`;
+                             return (
+                                 <path
+                                    key={i}
+                                    d={d}
+                                    fill="none"
+                                    stroke="url(#lineGrad)"
+                                    strokeWidth="2"
+                                    className="opacity-60"
+                                 />
+                             )
+                         })}
+                     </svg>
                  </div>
 
-                 <div className="relative w-[300px] md:w-[320px] h-[600px] md:h-[640px] md:mr-20 scale-75 md:scale-100 origin-top">
-                     <PhoneMockup className="absolute top-0 left-0 z-20 shadow-2xl border-stone-200 bg-stone-50">
-                          <div className="h-full flex flex-col p-6 overflow-hidden">
-                                <div className="flex items-center justify-between mb-8">
-                                     <div className="flex items-center gap-3">
-                                         <div className="w-10 h-10 rounded-full bg-stone-200"></div>
-                                         <div>
-                                            <div className="w-20 h-2.5 rounded bg-stone-800 mb-1.5"></div>
-                                            <div className="w-12 h-2 rounded bg-stone-200"></div>
-                                         </div>
-                                     </div>
-                                     <div className="w-8 h-8 rounded-full border border-stone-200"></div>
-                                </div>
-                                
-                                <div className="grid grid-cols-2 gap-4 mb-6">
-                                     <div className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm flex flex-col gap-3">
-                                         <div className="w-8 h-8 rounded-full bg-amber-100"></div>
-                                         <div className="h-2 w-16 bg-stone-200 rounded"></div>
-                                     </div>
-                                     <div className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm flex flex-col gap-3">
-                                         <div className="w-8 h-8 rounded-full bg-teal-100"></div>
-                                         <div className="h-2 w-16 bg-stone-200 rounded"></div>
-                                     </div>
-                                     <div className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm flex flex-col gap-3">
-                                         <div className="w-8 h-8 rounded-full bg-purple-100"></div>
-                                         <div className="h-2 w-16 bg-stone-200 rounded"></div>
-                                     </div>
-                                     <div className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm flex flex-col gap-3">
-                                         <div className="w-8 h-8 rounded-full bg-blue-100"></div>
-                                         <div className="h-2 w-16 bg-stone-200 rounded"></div>
-                                     </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                     <div className="w-full h-14 rounded-xl bg-white border border-stone-100 shadow-sm flex items-center px-4 gap-3">
-                                          <div className="w-8 h-8 rounded-lg bg-stone-100"></div>
-                                          <div className="flex-1">
-                                             <div className="w-24 h-2 rounded bg-stone-800 mb-1.5"></div>
-                                             <div className="w-16 h-2 rounded bg-stone-200"></div>
-                                          </div>
-                                     </div>
-                                     <div className="w-full h-14 rounded-xl bg-white border border-stone-100 shadow-sm flex items-center px-4 gap-3">
-                                          <div className="w-8 h-8 rounded-lg bg-stone-100"></div>
-                                          <div className="flex-1">
-                                             <div className="w-20 h-2 rounded bg-stone-800 mb-1.5"></div>
-                                             <div className="w-32 h-2 rounded bg-stone-200"></div>
-                                          </div>
-                                     </div>
-                                </div>
-                          </div>
-                     </PhoneMockup>
-
+                 {nodes.map((node, i) => (
                      <div 
-                        className="absolute top-20 -left-40 w-48 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 z-30"
-                        style={{ transform: `translate(${explode * -2.5}px, ${explode * -0.8}px) rotate(${explode * -0.1}deg)` }}
+                        key={i}
+                        className="absolute bg-white/90 backdrop-blur-md p-4 pr-6 rounded-2xl shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)] border border-white/50 flex items-center gap-4 min-w-[150px] md:min-w-[180px] z-20 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+                        style={{ 
+                            transform: `translate(${node.x}px, ${node.y}px) scale(${window.innerWidth < 768 ? 0.8 : 1})`,
+                        }}
                      >
-                         <div className="text-xs font-bold text-amber-500 uppercase mb-1">Tzedakah</div>
-                         <div className="text-2xl font-bold">$18.00</div>
-                     </div>
-
-                     <div 
-                        className="absolute bottom-40 -right-32 w-48 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 z-30"
-                        style={{ transform: `translate(${explode * 2.5}px, ${explode * 0.8}px) rotate(${explode * 0.1}deg)` }}
-                     >
-                         <div className="text-xs font-bold text-purple-500 uppercase mb-1">Tanya</div>
-                         <div className="text-lg font-bold">Chapter 41</div>
-                     </div>
-
-                      <div 
-                        className="absolute top-1/2 -translate-y-1/2 right-full mr-12 w-40 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 z-30"
-                        style={{ transform: `translate(${explode * -3.5}px, 0px)` }}
-                     >
-                         <div className="flex items-center gap-2">
-                             <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">🙏</div>
-                             <div className="font-bold">Mincha</div>
+                         <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center font-bold text-base md:text-lg shadow-inner ${node.color}`}>
+                             {node.label.charAt(0)}
+                         </div>
+                         <div>
+                             <div className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-0.5">{node.label}</div>
+                             <div className="font-display font-bold text-base md:text-xl text-stone-800">{node.val}</div>
                          </div>
                      </div>
+                 ))}
 
-                      <div 
-                        className="absolute bottom-20 -left-20 w-40 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 z-10"
-                        style={{ transform: `translate(${explode * -2}px, ${explode * 2}px) rotate(${explode * -0.2}deg)` }}
-                     >
-                         <div className="text-center">
-                             <div className="text-xs text-stone-400 uppercase">Kislev</div>
-                             <div className="text-3xl font-bold text-stone-900">19</div>
-                         </div>
-                     </div>
-
-                      <div 
-                        className="absolute top-10 -right-20 w-32 h-32 bg-stone-800 p-2 rounded-2xl shadow-xl border border-stone-600 z-10"
-                        style={{ transform: `translate(${explode * 2}px, ${explode * -2}px) rotate(${explode * 0.2}deg)` }}
-                     >
-                         <div className="w-full h-full bg-stone-700 rounded-xl relative opacity-50">
-                             <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-red-500 rounded-full border border-white"></div>
-                         </div>
-                     </div>
-                 </div>
              </div>
         </div>
 
-        {/* Layer 7: Ready to Ascend */}
+        {/* --- LAYER 7: ASCEND --- */}
         <div 
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center transition-all duration-700"
+            className="absolute inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center transition-all duration-700"
             style={{ opacity: Math.min(1, Math.max(0, (pAscend - 0.2) * 5)), pointerEvents: pAscend > 0.5 ? 'auto' : 'none' }}
         >
              <div className="relative z-10 text-center px-6">
-                 <div className="mb-12 transform transition-transform hover:scale-105 duration-500">
-                    <h2 className="text-7xl md:text-[10rem] font-display font-bold text-white tracking-tighter mb-4 leading-none drop-shadow-2xl">Ascend.</h2>
-                    <p className="text-2xl md:text-3xl font-serif italic text-white mt-8">Your sanctuary awaits.</p>
+                 <div className="mb-12 transform transition-transform hover:scale-105 duration-500 cursor-pointer" onClick={() => {
+                     if (audioRef.current && !isMuted) audioRef.current.play();
+                     onEnter();
+                 }}>
+                    <div className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-8 rounded-full border-2 border-white/20 flex items-center justify-center animate-[pulse_3s_infinite]">
+                        <Crown className="text-white w-6 h-6 md:w-10 md:h-10" />
+                    </div>
+                    <h2 className="text-5xl md:text-[10rem] font-display font-bold text-white tracking-tighter mb-4 leading-none drop-shadow-2xl">Ascend.</h2>
+                    <p className="text-lg md:text-3xl font-serif italic text-white/80 mt-8 px-4">Your sanctuary awaits.</p>
                  </div>
 
-                 <div className="flex flex-col md:flex-row gap-6 justify-center">
-                     <button onClick={onEnter} className="px-16 py-6 bg-white text-black rounded-full font-bold text-xl hover:bg-stone-200 transition-all shadow-xl hover:-translate-y-1">
-                         Enter the Kingdom
-                     </button>
-                 </div>
+                 <button onClick={() => {
+                     if (audioRef.current && !isMuted) audioRef.current.play();
+                     onEnter();
+                 }} className="px-10 py-4 md:px-16 md:py-6 bg-white text-black rounded-full font-bold text-base md:text-xl hover:bg-stone-200 transition-all shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:-translate-y-1 uppercase tracking-widest">
+                     Enter the Kingdom
+                 </button>
                  
-                 <div className="mt-20 text-white/50 text-sm font-serif">
+                 <div className="mt-16 md:mt-20 text-white/30 text-[10px] font-bold uppercase tracking-[0.3em]">
                      © 2025 King.do
                  </div>
              </div>
@@ -567,16 +780,18 @@ const LandingContent: React.FC<LandingPageProps & { hasEntered: boolean }> = ({ 
 
       </div>
 
-      <div className="h-[40000px]"></div>
+      <div className="h-[42000px]"></div>
 
-      <div className={`fixed bottom-10 left-0 right-0 z-50 flex justify-center transition-opacity duration-300 ${pAscend > 0.5 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-         <div onClick={onEnter} className="bg-stone-900/80 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-1 cursor-pointer group hover:bg-stone-900 transition-colors">
-            <div className="bg-white/10 text-white p-3 rounded-full">
-               <Menu size={20} />
+      <div className={`fixed bottom-10 left-0 right-0 z-50 flex justify-center transition-opacity duration-300 ${showFixedButton ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+         <div onClick={() => {
+             if (audioRef.current && !isMuted) audioRef.current.play();
+             onEnter();
+         }} className="bg-black/90 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex items-center gap-1 cursor-pointer group hover:scale-105 transition-transform border border-white/10">
+            <div className="bg-white/20 text-white p-3 rounded-full">
+               <ChevronRight size={20} />
             </div>
             <button className="px-6 py-2 rounded-full text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
                Enter
-               <ChevronRight className="opacity-60" />
             </button>
          </div>
       </div>
@@ -595,7 +810,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
 
   const handleEnter = () => {
       setHasEntered(true);
-      // Wait for the fade-out transition (1000ms defined in LandingContent) before unmounting
       setTimeout(() => {
           onEnter();
       }, 1000);
