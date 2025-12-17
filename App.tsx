@@ -6,7 +6,7 @@ import { HabitTracker } from './src/components/HabitTracker';
 import { StudySession } from './src/components/StudySession';
 import { Library } from './src/components/Library';
 import { Profile } from './src/components/Profile';
-import { Community } from './src/components/Community';
+import { Community } from './components/Community';
 import { LandingPage } from './src/components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './src/types';
 import { supabase } from './src/lib/supabase';
