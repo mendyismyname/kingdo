@@ -11,7 +11,6 @@ import { LandingPage } from './components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
 import { supabase } from './lib/supabase'; // Import Supabase client
 import { Auth } from './components/Auth'; // Import Auth component
-import { showSuccess, showError } from './utils/toast';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any | null>(null); // Supabase session
@@ -98,7 +97,7 @@ const App: React.FC = () => {
           }
         } catch (error: any) {
           console.error('Error fetching user profile:', error.message);
-          showError('Failed to load profile. Please try again.');
+          // showError('Failed to load profile. Please try again.'); // Removed toast
         }
       } else {
         // Clear profile and data if no session
@@ -123,7 +122,8 @@ const App: React.FC = () => {
 
   const handleOnboardingComplete = async (newProfileData: Omit<UserProfile, 'id' | 'totalStudyMinutes' | 'theme' | 'language'>) => {
     if (!session?.user) {
-      showError('No active session to complete onboarding.');
+      // showError('No active session to complete onboarding.'); // Removed toast
+      console.error('No active session to complete onboarding.');
       return;
     }
 
@@ -162,7 +162,7 @@ const App: React.FC = () => {
         };
         setProfile(createdProfile);
         setIsOnboardingNeeded(false);
-        showSuccess('Welcome to the Kingdom!');
+        // showSuccess('Welcome to the Kingdom!'); // Removed toast
 
         // Assign initial habits based on demographic
         let initialHabits: Habit[] = [];
@@ -183,7 +183,7 @@ const App: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error completing onboarding:', error.message);
-      showError('Failed to complete onboarding. Please try again.');
+      // showError('Failed to complete onboarding. Please try again.'); // Removed toast
     }
   };
 
@@ -234,9 +234,10 @@ const App: React.FC = () => {
                 .eq('id', session.user.id);
               if (error) throw error;
               setProfile({ ...profile, theme });
-              showSuccess('Theme updated!');
+              // showSuccess('Theme updated!'); // Removed toast
           } catch (error: any) {
-              showError('Failed to update theme: ' + error.message);
+              // showError('Failed to update theme: ' + error.message); // Removed toast
+              console.error('Failed to update theme: ' + error.message);
           }
       }
   };
@@ -250,9 +251,10 @@ const App: React.FC = () => {
                 .eq('id', session.user.id);
               if (error) throw error;
               setProfile({ ...profile, language });
-              showSuccess('Language updated!');
+              // showSuccess('Language updated!'); // Removed toast
           } catch (error: any) {
-              showError('Failed to update language: ' + error.message);
+              // showError('Failed to update language: ' + error.message); // Removed toast
+              console.error('Failed to update language: ' + error.message);
           }
       }
   }
@@ -266,9 +268,10 @@ const App: React.FC = () => {
                 .eq('id', session.user.id);
               if (error) throw error;
               setProfile({ ...profile, community });
-              showSuccess('Community updated!');
+              // showSuccess('Community updated!'); // Removed toast
           } catch (error: any) {
-              showError('Failed to update community: ' + error.message);
+              // showError('Failed to update community: ' + error.message); // Removed toast
+              console.error('Failed to update community: ' + error.message);
           }
       }
   }
@@ -282,9 +285,10 @@ const App: React.FC = () => {
                 .eq('id', session.user.id);
               if (error) throw error;
               setProfile({ ...profile, name });
-              showSuccess('Name updated!');
+              // showSuccess('Name updated!'); // Removed toast
           } catch (error: any) {
-              showError('Failed to update name: ' + error.message);
+              // showError('Failed to update name: ' + error.message); // Removed toast
+              console.error('Failed to update name: ' + error.message);
           }
       }
   }
@@ -310,9 +314,10 @@ const App: React.FC = () => {
               setSession(null);
               setIsOnboardingNeeded(false);
               setShowLanding(true); // Go back to landing page after reset
-              showSuccess('Profile reset and signed out successfully!');
+              // showSuccess('Profile reset and signed out successfully!'); // Removed toast
           } catch (error: any) {
-              showError('Failed to reset profile: ' + error.message);
+              // showError('Failed to reset profile: ' + error.message); // Removed toast
+              console.error('Failed to reset profile: ' + error.message);
           }
       }
   }

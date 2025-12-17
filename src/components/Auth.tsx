@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { showSuccess, showError } from '../utils/toast';
 
 interface AuthProps {
   onAuthSuccess: () => void;
@@ -22,17 +21,18 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       if (isSigningUp) {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        showSuccess('Check your email for the confirmation link!');
+        // showSuccess('Check your email for the confirmation link!'); // Removed toast
         // For sign-up, we don't immediately call onAuthSuccess, as email confirmation is needed.
         // The App.tsx will detect the session change after confirmation.
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        showSuccess('Signed in successfully!');
+        // showSuccess('Signed in successfully!'); // Removed toast
         onAuthSuccess(); // Trigger App.tsx to load profile
       }
     } catch (error: any) {
-      showError(error.message);
+      // showError(error.message); // Removed toast
+      console.error('Auth error:', error.message);
     } finally {
       setLoading(false);
     }

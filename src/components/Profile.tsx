@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { UserProfile, Habit, AppTheme, AppLanguage } from '../types';
-import { showSuccess, showError } from '../utils/toast'; // Import showSuccess and showError
 
 interface ProfileProps {
   profile: UserProfile;
@@ -69,33 +68,28 @@ export const Profile: React.FC<ProfileProps> = ({ profile, habits, onReset, onUp
   const handleNameSave = () => {
       if (nameInput.trim() && nameInput.trim() !== profile.name) {
           onUpdateName(nameInput.trim());
-          showSuccess('Name updated!'); // Toast notification
       } else if (nameInput.trim() === profile.name) {
-          showError('Name is already the same.');
+          // No change
       } else {
-          showError('Name cannot be empty.');
+          // Name cannot be empty
       }
   };
 
   const handleThemeUpdate = (theme: AppTheme) => {
       onUpdateTheme(theme);
-      showSuccess(`Theme changed to ${theme}!`); // Toast notification
   };
 
   const handleLanguageUpdate = (lang: AppLanguage) => {
       onUpdateLanguage(lang);
-      showSuccess(`Language changed to ${lang}!`); // Toast notification
   };
 
   const handleCommunityUpdate = (community: string) => {
       onUpdateCommunity(community);
-      showSuccess(`Community set to ${community}!`); // Toast notification
   };
 
   const handleReset = () => {
       if(confirm("Are you sure you want to reset all your data? This action cannot be undone.")) {
           onReset();
-          showSuccess('Profile data reset successfully!'); // Toast notification
       }
   };
 

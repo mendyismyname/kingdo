@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Habit } from '../types';
-import { showSuccess } from '../utils/toast'; // Import showSuccess
 
 interface HabitTrackerProps {
   habits: Habit[];
@@ -21,14 +20,12 @@ export const HabitTracker: React.FC<HabitTrackerProps> = ({ habits, onToggle, on
     e.preventDefault();
     if (newHabit.trim()) {
       onAdd(newHabit, 'ACTION');
-      showSuccess('Habit added!'); // Toast notification
       setNewHabit('');
     }
   };
 
   const addSuggestion = (suggestion: string) => {
       onAdd(suggestion, 'ACTION');
-      showSuccess('Habit added!'); // Toast notification
   };
 
   const completedToday = habits.filter(h => h.history[todayStr]).length;

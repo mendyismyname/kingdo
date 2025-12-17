@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Book, BookProgress, UserProfile, BookLesson, Demographic } from '../types';
-import { showSuccess } from '../utils/toast'; // Import showSuccess
 
 interface LibraryProps {
   userProfile: UserProfile;
@@ -152,7 +151,6 @@ export const Library: React.FC<LibraryProps> = ({ userProfile, progress, onUpdat
                             onUpdateProgress(selectedBook.id, getProgress(selectedBook.id) + 1);
                             window.speechSynthesis.cancel();
                             setSelectedBook(null);
-                            showSuccess('Lesson completed! New habit added.'); // Toast notification
                         }}
                         className="pointer-events-auto w-full max-w-sm bg-king-primary text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:shadow-glow hover:scale-[1.02] active:scale-95 transition-all shadow-md flex items-center justify-center gap-2"
                     >

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { UserProfile, Insight, Habit, NewsItem } from '../types';
 import { generateDailyInsight } from '../services/geminiService';
-import { showSuccess } from '../utils/toast'; // Import showSuccess
 
 interface DashboardProps {
   userProfile: UserProfile;
@@ -258,7 +257,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ userProfile, habits, onAdd
                                 onClick={() => {
                                     onAddHabit(cleanText(insight.actionableStep), 'ACTION');
                                     onNavigate('habits');
-                                    showSuccess('Mission accepted!'); // Toast notification
                                 }}
                                 className="bg-white text-king-primary px-6 py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-opacity-95 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 flex items-center gap-3 group/btn"
                             >

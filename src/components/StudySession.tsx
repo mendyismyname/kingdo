@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { UserProfile, ChatMessage, Demographic } from '../types';
 import { chatWithKing } from '../services/geminiService';
-import { showError } from '../utils/toast'; // Import showError
 
 interface StudySessionProps {
   userProfile: UserProfile;
@@ -65,10 +64,6 @@ export const StudySession: React.FC<StudySessionProps> = ({ userProfile, onAddHa
 
     const responseText = await chatWithKing(userProfile, input, messages);
     
-    if (responseText.includes("Connection to the source interrupted.")) {
-        showError(responseText); // Show error toast
-    }
-
     setMessages(prev => [...prev, { 
       id: (Date.now() + 1).toString(), 
       role: 'model', 
