@@ -452,13 +452,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         let targetScrollPercent = 0;
         const clock = new THREE.Clock();
 
-        const handleScroll = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.body.scrollHeight;
-            const winHeight = window.innerHeight;
-            // Calculate scroll percentage relative to the total scrollable height
-            targetScrollPercent = Math.max(0, Math.min(1, scrollTop / (docHeight - winHeight)));
-        };
+
 
         window.addEventListener('scroll', handleScroll);
         
