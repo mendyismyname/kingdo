@@ -447,7 +447,9 @@ scene.add(debugCube);
         const animate = () => {
             frameId = requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
-
+// Inside animate() ...
+debugCube.rotation.x += 0.05;
+debugCube.rotation.y += 0.05;
             // 1. ROBUST SCROLL CALCULATION
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
             const docHeight = Math.max(
