@@ -5,7 +5,7 @@ import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } 
 const MODEL_ID = "gemini-2.5-flash";
 
 // --- Helper Functions (Image Map, System Instruction) ---
-// (These functions remain largely unchanged, included for completeness)
+// (These functions remain unchanged)
 
 // Curated list of high quality images for different categories
 const IMAGE_MAP: Record<string, string[]> = {
@@ -132,40 +132,46 @@ Directives:
 `;
 };
 
-// --- AI Client Initialization ---
-// Function to get the API key from environment variables
-const getApiKey = (): string | undefined => {
-  return import.meta.env.VITE_GEMINI_API_KEY;
-};
+// --- AI Client Management ---
+let aiClient: GoogleGenAI | null = null;
 
-// Function to create the AI client instance
-const createAiClient = (key: string) => {
-  return new GoogleGenAI({ apiKey: key });
+// Function to get or create the AI client instance
+const getAiClient = (): GoogleGenAI | null => {
+  // If client already exists, return it
+  if (aiClient) {
+    return aiClient;
+  }
+
+  // Get the API key from environment variables
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+  // Check if the API key is available
+  if (!apiKey) {
+    console.error("VITE_GEMINI_API_KEY is not set. Please check your .env.local file.");
+    return null;
+  }
+
+  try {
+    // Create the client instance with the API key
+    aiClient = new GoogleGenAI({ apiKey });
+    console.log("GoogleGenAI client initialized successfully.");
+    return aiClient;
+  } catch (error) {
+    console.error("Failed to initialize GoogleGenAI client:", error);
+    return null;
+  }
 };
 
 // --- Exported Functions ---
 
 export const generateDailyInsight = async (profile: UserProfile): Promise<Insight> => {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback insight.");
+  const ai = getAiClient();
+  if (!ai) {
+    console.warn("Gemini API client not available. Returning fallback insight.");
     return {
       content: "The King is waiting for your return.",
       source: "Inner Voice",
       actionableStep: "Take a moment of silence."
-    };
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = createAiClient(apiKey);
-  } catch (initError) {
-    console.error("Failed to initialize GoogleGenAI client:", initError);
-    return {
-      content: "The King's wisdom is currently sealed.",
-      source: "Inner Voice",
-      actionableStep: "Check your connection to the source."
     };
   }
 
@@ -200,7 +206,7 @@ Return as JSON.`;
     }
     throw new Error("No response text");
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Gemini Error (generateDailyInsight):", error);
     // Return a fallback insight if the API call fails
     return {
       content: "The King is waiting for your return.",
@@ -221,18 +227,12 @@ const getRandomImage = (category: string) => {
 };
 
 export const generateNewsFeed = async (profile: UserProfile): Promise<NewsItem[]> => {
-  const apiKey = getApiKey();
+  // NOTE: This function is currently bypassed in Dashboard.tsx by hardcoded news
+  // but kept here for fallback or future dynamic generation.
 
-  if (!apiKey) {
-    console.warn("VITE_GEMINI_API_KEY is not set. Returning empty news feed.");
-    return [];
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = createAiClient(apiKey);
-  } catch (initError) {
-    console.error("Failed to initialize GoogleGenAI client:", initError);
+  const ai = getAiClient();
+  if (!ai) {
+    console.warn("Gemini API client not available. Returning empty news feed.");
     return [];
   }
 
@@ -280,7 +280,7 @@ Return as JSON Array.`;
     }
     return [];
   } catch (error) {
-    console.error("News Error:", error);
+    console.error("News Error (generateNewsFeed):", error);
     return [];
   }
 };
@@ -290,19 +290,10 @@ export const chatWithKing = async (
   message: string,
   history: { role: 'user' | 'model', text: string }[]
 ) => {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback chat message.");
+  const ai = getAiClient();
+  if (!ai) {
+    console.warn("Gemini API client not available. Returning fallback chat message.");
     return "The King's wisdom is currently sealed. Please check your connection to the source.";
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = createAiClient(apiKey);
-  } catch (initError) {
-    console.error("Failed to initialize GoogleGenAI client:", initError);
-    return "The King's wisdom is currently sealed. Initialization failed.";
   }
 
   const systemInstruction = getSystemInstruction(profile);
@@ -326,24 +317,15 @@ export const chatWithKing = async (
     const result = await chat.sendMessage({ message });
     return result.text;
   } catch (error) {
-    console.error("Chat Error", error);
+    console.error("Chat Error (chatWithKing):", error);
     return "Connection to the source interrupted. Try again.";
   }
 };
 
 export const suggestHabitFromChat = async (profile: UserProfile, chatContext: string): Promise<any> => {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    console.warn("VITE_GEMINI_API_KEY is not set. Returning null habit suggestion.");
-    return null;
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = createAiClient(apiKey);
-  } catch (initError) {
-    console.error("Failed to initialize GoogleGenAI client:", initError);
+  const ai = getAiClient();
+  if (!ai) {
+    console.warn("Gemini API client not available. Returning null habit suggestion.");
     return null;
   }
 
@@ -370,34 +352,20 @@ Return JSON: { "title": "string", "category": "THOUGHT" | "SPEECH" | "ACTION", "
     });
     return JSON.parse(response.text || "{}");
   } catch (e) {
-    console.error("Habit Suggestion Error", e);
+    console.error("Habit Suggestion Error (suggestHabitFromChat):", e);
     return null;
   }
 };
 
 export const generateBookLesson = async (profile: UserProfile, bookTitle: string, chapter: number): Promise<BookLesson> => {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    console.warn("VITE_GEMINI_API_KEY is not set. Returning fallback book lesson.");
+  const ai = getAiClient();
+  if (!ai) {
+    console.warn("Gemini API client not available. Returning fallback book lesson.");
     return {
       title: "Study Error",
       content: "Could not retrieve lesson from the archives.",
       summary: "Try again later.",
       practicalApplication: "Review what you learned yesterday."
-    };
-  }
-
-  let ai: GoogleGenAI;
-  try {
-    ai = createAiClient(apiKey);
-  } catch (initError) {
-    console.error("Failed to initialize GoogleGenAI client:", initError);
-    return {
-      title: "Study Error",
-      content: "Could not retrieve lesson from the archives.",
-      summary: "Initialization failed.",
-      practicalApplication: "Check your connection to the source."
     };
   }
 
@@ -433,7 +401,7 @@ Provide a concise lesson. Return JSON with:
     if (response.text) return JSON.parse(response.text) as BookLesson;
     throw new Error("No text");
   } catch (e) {
-    console.error("Book Lesson Error", e);
+    console.error("Book Lesson Error (generateBookLesson):", e);
     return {
       title: "Study Error",
       content: "Could not retrieve lesson from the archives.",
