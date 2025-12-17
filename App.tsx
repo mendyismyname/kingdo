@@ -3,7 +3,7 @@ import { Onboarding } from './src/components/Onboarding';
 import { Layout } from './components/Layout';
 import { Dashboard } from './src/components/Dashboard';
 import { HabitTracker } from './src/components/HabitTracker';
-import { StudySession } from './src/components/StudySession';
+import { StudySession } from './components/StudySession';
 import { Library } from './src/components/Library';
 import { Profile } from './components/Profile';
 import { Community } from './components/Community';
