@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { UserProfile, AppLanguage } from '../types';
+import { UserProfile, AppLanguage } from '../../types';
 
 interface LayoutProps {
   children: ReactNode;
