@@ -19,22 +19,21 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
 
         // --- Scene Setup ---
         const scene = new THREE.Scene();
-        // Slightly darker, more mystical fog
         scene.fog = new THREE.FogExp2(0x8fa3c0, 0.006);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 3000);
+        // Initial position matches the start of animation
         camera.position.set(0, 5, 60);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        // FIX: High resolution for retina screens
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
         
-
-
         containerRef.current.appendChild(renderer.domElement);
 
         // --- Textures ---
@@ -48,7 +47,6 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             ctx.fillStyle = '#fdfdfd';
             ctx.fillRect(0,0,1024,1024);
             
-            // Veins
             for(let i=0; i<15; i++) {
                 ctx.beginPath();
                 let x = Math.random() * 1024;
@@ -77,22 +75,18 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
              const ctx = canvas.getContext('2d');
              if(!ctx) return new THREE.Texture();
              
-             // Base Stone
              ctx.fillStyle = '#a8a29e'; 
              ctx.fillRect(0,0,512,512);
              
-             // Noise / Texture
              for(let i=0; i<8000; i++) {
                  const x = Math.random() * 512;
                  const y = Math.random() * 512;
                  const size = 1 + Math.random() * 2;
-                 // Varied grey spots
                  ctx.fillStyle = Math.random() > 0.5 ? '#78716c' : '#d6d3d1';
                  ctx.globalAlpha = 0.4;
                  ctx.fillRect(x, y, size, size);
              }
 
-             // Slight brick pattern hint
              ctx.globalAlpha = 0.1;
              ctx.strokeStyle = '#57534e';
              ctx.lineWidth = 1;
@@ -131,11 +125,10 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             const ctx = canvas.getContext('2d');
             if(!ctx) return new THREE.Texture();
             
-            // Dreamier gradient
             const grd = ctx.createLinearGradient(0, 0, 0, 1024);
-            grd.addColorStop(0, "#2b5876"); // Dark blue top
-            grd.addColorStop(0.5, "#4e4376"); // Purple mid
-            grd.addColorStop(1, "#f0f2f0"); // Light bottom
+            grd.addColorStop(0, "#2b5876"); 
+            grd.addColorStop(0.5, "#4e4376"); 
+            grd.addColorStop(1, "#f0f2f0"); 
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, 2048, 1024);
 
@@ -158,8 +151,8 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             metalness: 0.1,
             clearcoat: 0.6,
             reflectivity: 0.8,
-            emissive: 0xffeebb, // Increased glow (warm white) to emit light
-            emissiveIntensity: 0.25 // Higher intensity
+            emissive: 0xffeebb, 
+            emissiveIntensity: 0.25
         });
 
         const stoneMaterial = new THREE.MeshStandardMaterial({
@@ -174,13 +167,13 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             roughness: 0.1,
             metalness: 0.8,
             emissive: 0xffaa00,
-            emissiveIntensity: 0.6 // Stronger gold glow
+            emissiveIntensity: 0.6 
         });
 
         const entranceMaterial = new THREE.MeshStandardMaterial({
             color: CONFIG.entranceColor,
             roughness: 0.8,
-            emissive: 0x331100, // Slight inner glow from entrance
+            emissive: 0x331100, 
             emissiveIntensity: 0.2
         });
 
@@ -188,7 +181,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             color: 0xa1c4fd,
             metalness: 0.2,
             roughness: 0.1,
-            transmission: 0.2, // Slight glass effect
+            transmission: 0.2, 
             transparent: true,
             opacity: 0.9,
         });
@@ -226,12 +219,10 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         dirLight.shadow.camera.bottom = -d;
         scene.add(dirLight);
 
-        // Temple Glow Light - Intensified
         const templeLight = new THREE.PointLight(0xffaa00, 3.0, 200);
         templeLight.position.set(0, 45, -45);
         scene.add(templeLight);
 
-        // Blue backlight for mystery
         const backLight = new THREE.DirectionalLight(0x4e4376, 0.8);
         backLight.position.set(-50, 20, -100);
         scene.add(backLight);
@@ -241,15 +232,15 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const skyBox = new THREE.Mesh(skyGeo, skyMaterial);
         scene.add(skyBox);
 
-        // PARTICLES (Dream dust)
+        // PARTICLES
         const particleCount = 400;
         const particleGeo = new THREE.BufferGeometry();
         const particlePos = new Float32Array(particleCount * 3);
         const particleSpeeds = new Float32Array(particleCount);
         for(let i=0; i<particleCount; i++) {
-            particlePos[i*3] = (Math.random() - 0.5) * 200; // x
-            particlePos[i*3+1] = Math.random() * 100 - 20; // y
-            particlePos[i*3+2] = (Math.random() - 0.5) * 150; // z
+            particlePos[i*3] = (Math.random() - 0.5) * 200; 
+            particlePos[i*3+1] = Math.random() * 100 - 20; 
+            particlePos[i*3+2] = (Math.random() - 0.5) * 150; 
             particleSpeeds[i] = 0.02 + Math.random() * 0.05;
         }
         particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
@@ -267,9 +258,9 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const stairGroup = new THREE.Group();
         const steps: any[] = [];
 
-        // Heichal (Temple Structure) - Wider
+        // Heichal 
         const heichalH = 35;
-        const heichalW = 44; // Increased from 32
+        const heichalW = 44; 
         const heichalD = 20;
         const heichal = new THREE.Mesh(new THREE.BoxGeometry(heichalW, heichalH, heichalD), marbleMaterial);
         heichal.position.set(0, heichalH/2, -50);
@@ -277,10 +268,9 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         heichal.receiveShadow = true;
         complexGroup.add(heichal);
 
-        // Roof Spikes (Kilah Orev)
-        // Add a grid of spikes on the roof
+        // Roof Spikes
         const spikeRows = 4;
-        const spikesPerRow = 30; // Increased density for wider roof
+        const spikesPerRow = 30; 
         for(let row=0; row < spikeRows; row++) {
             const z = -50 - (heichalD/2) + (row * (heichalD/(spikeRows-1)));
             for(let i=0; i < spikesPerRow; i++) {
@@ -309,7 +299,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         fTop.position.set(0, 22 + frameW/2, -50 + heichalD/2 + 0.1);
         complexGroup.add(fTop);
 
-        // Pillars - Moved inward
+        // Pillars
         const pillarGeo = new THREE.CylinderGeometry(2, 2, 22, 32);
         const p1 = new THREE.Mesh(pillarGeo, marbleMaterial);
         p1.position.set(-14, 11, -35);
@@ -327,7 +317,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         cap2.position.set(14, 22, -35);
         complexGroup.add(cap2);
 
-        // Courtyards (Azara) - Slightly Smaller
+        // Courtyards
         const azaraW = 160;
         const azaraD = 140;
         const azaraFloor = new THREE.Mesh(new THREE.BoxGeometry(azaraW, 1, azaraD), marbleMaterial);
@@ -336,30 +326,27 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         complexGroup.add(azaraFloor);
 
         const backWall = new THREE.Mesh(new THREE.BoxGeometry(azaraW, 12, 4), marbleMaterial);
-        backWall.position.set(0, 6, -120); // Adjusted for smaller depth
+        backWall.position.set(0, 6, -120); 
         backWall.castShadow = true;
         complexGroup.add(backWall);
 
-        // --- Mizbeach (Altar) ---
+        // --- Mizbeach ---
         const mizbeachSize = 22;
         const mizbeachHeight = 9;
-        const mizbeachZ = -15; // Position in front of Heichal
+        const mizbeachZ = -15; 
         
-        // Main Block
         const mizbeach = new THREE.Mesh(new THREE.BoxGeometry(mizbeachSize, mizbeachHeight, mizbeachSize), stoneMaterial);
         mizbeach.position.set(0, mizbeachHeight/2, mizbeachZ);
         mizbeach.castShadow = true;
         mizbeach.receiveShadow = true;
         complexGroup.add(mizbeach);
 
-        // Base (Yesod)
         const baseSize = mizbeachSize + 2;
         const baseHeight = 1;
         const base = new THREE.Mesh(new THREE.BoxGeometry(baseSize, baseHeight, baseSize), stoneMaterial);
         base.position.set(0, baseHeight/2, mizbeachZ);
         complexGroup.add(base);
 
-        // Horns (Keranot)
         const hornSize = 1.5;
         const hornGeo = new THREE.BoxGeometry(hornSize, hornSize, hornSize);
         const halfM = mizbeachSize/2 - hornSize/2;
@@ -370,21 +357,19 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const c3 = new THREE.Mesh(hornGeo, stoneMaterial); c3.position.set(-halfM, hornY, mizbeachZ + halfM); complexGroup.add(c3);
         const c4 = new THREE.Mesh(hornGeo, stoneMaterial); c4.position.set(halfM, hornY, mizbeachZ + halfM); complexGroup.add(c4);
 
-        // Ramp (Kevesh) - Left Side (-X) - Longer
-        const rampLen = 35; // Increased length
+        // Ramp
+        const rampLen = 35; 
         const rampWidth = 8;
-        
         const rampShape = new THREE.Shape();
         rampShape.moveTo(0, 0);
-        rampShape.lineTo(rampLen, mizbeachHeight - 1); // Top
-        rampShape.lineTo(rampLen, 0); // Bottom right
-        rampShape.lineTo(0, 0); // Close
+        rampShape.lineTo(rampLen, mizbeachHeight - 1); 
+        rampShape.lineTo(rampLen, 0); 
+        rampShape.lineTo(0, 0); 
 
         const extrudeSettings = { steps: 1, depth: rampWidth, bevelEnabled: false };
         const rampGeo = new THREE.ExtrudeGeometry(rampShape, extrudeSettings);
         const rampMesh = new THREE.Mesh(rampGeo, stoneMaterial);
         
-        // Position: Start left of the mizbeach, move towards it.
         rampMesh.position.set(- (mizbeachSize/2) - rampLen, 0, mizbeachZ - (rampWidth/2));
         rampMesh.castShadow = true;
         rampMesh.receiveShadow = true;
@@ -397,9 +382,9 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const smokePData: { speed: number, offset: number }[] = [];
         
         for(let i=0; i<smokeCount; i++) {
-            smokePPos[i*3] = (Math.random() - 0.5) * 5; // x spread at base
-            smokePPos[i*3+1] = mizbeachHeight + 1 + Math.random() * 20; // y start height
-            smokePPos[i*3+2] = mizbeachZ + (Math.random() - 0.5) * 5; // z spread at base
+            smokePPos[i*3] = (Math.random() - 0.5) * 5; 
+            smokePPos[i*3+1] = mizbeachHeight + 1 + Math.random() * 20; 
+            smokePPos[i*3+2] = mizbeachZ + (Math.random() - 0.5) * 5; 
             
             smokePData.push({
                 speed: 0.05 + Math.random() * 0.1,
@@ -447,20 +432,26 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         floor.position.y = -5;
         scene.add(floor);
 
-        // Animation Loop
+        // --- ANIMATION LOOP (Fixed) ---
         let scrollPercent = 0;
         let targetScrollPercent = 0;
         const clock = new THREE.Clock();
-
-
-        
         const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
-
         let frameId: number;
 
         const animate = () => {
             frameId = requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
+
+            // Scroll Logic - Calculate every frame
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight; 
+            const winHeight = window.innerHeight;
+            const scrollable = docHeight - winHeight;
+            
+            if (scrollable > 0) {
+                targetScrollPercent = Math.max(0, Math.min(1, scrollTop / scrollable));
+            }
 
             scrollPercent = lerp(scrollPercent, targetScrollPercent, 0.05);
 
@@ -468,47 +459,21 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
                 skyBox.material.map.offset.x = time * 0.01; 
             }
 
-            // ... inside the animate() function ...
-
-const animate = () => {
-    frameId = requestAnimationFrame(animate);
-    const time = clock.getElapsedTime();
-
-    // ✅ ADD THIS SCROLL LOGIC HERE INSTEAD:
-    const scrollTop = window.scrollY;
-    // We use document.documentElement which is more reliable for <html> scrolling
-    const docHeight = document.documentElement.scrollHeight; 
-    const winHeight = window.innerHeight;
-    
-    // Recalculate target every frame
-    const scrollable = docHeight - winHeight;
-    if (scrollable > 0) {
-        targetScrollPercent = Math.max(0, Math.min(1, scrollTop / scrollable));
-    }
-
-    // Keep your existing lerp logic
-    scrollPercent = lerp(scrollPercent, targetScrollPercent, 0.05);
-
-    // ... Keep the rest of your animation code (particles, smoke, steps, camera) ...
-
-            // Animate Particles
+            // Particles
             const positions = particleGeo.attributes.position.array as Float32Array;
             for(let i=0; i<particleCount; i++) {
-                positions[i*3+1] += particleSpeeds[i]; // y
+                positions[i*3+1] += particleSpeeds[i]; 
                 if(positions[i*3+1] > 80) positions[i*3+1] = -20;
             }
             particleGeo.attributes.position.needsUpdate = true;
 
-            // Animate Smoke
+            // Smoke
             const sPos = smokePGeo.attributes.position.array as Float32Array;
             for(let i=0; i<smokeCount; i++) {
                 const data = smokePData[i];
-                sPos[i*3+1] += data.speed; // Rise
-                
-                // Drift logic - wind sway
+                sPos[i*3+1] += data.speed; 
                 sPos[i*3] += Math.sin(time + data.offset) * 0.02;
                 
-                // Reset
                 if(sPos[i*3+1] > 35 + mizbeachHeight) {
                     sPos[i*3+1] = mizbeachHeight + 1;
                     sPos[i*3] = (Math.random() - 0.5) * 5;
@@ -517,6 +482,7 @@ const animate = () => {
             }
             smokePGeo.attributes.position.needsUpdate = true;
 
+            // Steps
             steps.forEach((step, i) => {
                 const stepThreshold = i / (steps.length + 8); 
                 const activation = (scrollPercent * 1.3) - stepThreshold;
@@ -525,7 +491,8 @@ const animate = () => {
             });
 
             // Camera Movement
-            const startPos = new THREE.Vector3(0, -5, 120); // Lower Y start
+            // Start at z=60 (close) -> move to z=20 (closer/higher)
+            const startPos = new THREE.Vector3(0, 5, 60); 
             const endPos = new THREE.Vector3(0, 60, 20);
             
             camera.position.x = lerp(startPos.x, endPos.x, scrollPercent);
@@ -543,17 +510,17 @@ const animate = () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         };
         window.addEventListener('resize', handleResize);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleResize);
             cancelAnimationFrame(frameId);
+            renderer.dispose();
             if(containerRef.current) {
                 containerRef.current.innerHTML = '';
             }
-            renderer.dispose();
         };
     }, []);
 
