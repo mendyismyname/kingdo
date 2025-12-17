@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Onboarding } from './components/Onboarding';
+import { Onboarding } from './src/components/Onboarding';
 import { Layout } from './components/Layout';
-import { Dashboard } from './components/Dashboard';
-import { HabitTracker } from './components/HabitTracker';
-import { StudySession } from './components/StudySession';
-import { Library } from './components/Library';
+import { Dashboard } from './src/components/Dashboard';
+import { HabitTracker } from './src/components/HabitTracker';
+import { StudySession } from './src/components/StudySession';
+import { Library } from './src/components/Library';
 import { Profile } from './components/Profile';
 import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
