@@ -8,7 +8,7 @@ import { Library } from './src/components/Library';
 import { Profile } from './src/components/Profile';
 import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
-import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './src/types';
+import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
 import { supabase } from './src/lib/supabase';
 import { Auth } from './src/components/Auth';
 
