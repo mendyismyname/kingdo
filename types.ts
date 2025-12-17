@@ -19,6 +19,7 @@ export enum AppLanguage {
 export type AppTheme = 'mint' | 'orange' | 'blue' | 'purple';
 
 export interface UserProfile {
+  id: string; // Added for Supabase user ID
   name: string;
   demographic: Demographic;
   level: number; // 1-10

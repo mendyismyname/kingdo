@@ -9,13 +9,17 @@ import { Profile } from './components/Profile';
 import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
+import { supabase } from './lib/supabase'; // Import Supabase client
+import { Auth } from './components/Auth'; // Import Auth component
+import { showSuccess, showError } from './utils/toast';
 
 const App: React.FC = () => {
+  const [session, setSession] = useState<any | null>(null); // Supabase session
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [habits, setHabits] = useState<Habit[]>([]);
   const [bookProgress, setBookProgress] = useState<BookProgress[]>([]);
-  const [showLanding, setShowLanding] = useState(true);
+  const [isOnboardingNeeded, setIsOnboardingNeeded] = useState(false); // New state for onboarding
   
   // Mobile Study Mode: 'text' (default) or 'chat'
   const [mobileStudyMode, setMobileStudyMode] = useState<'text' | 'chat'>('text');
@@ -26,55 +30,154 @@ const App: React.FC = () => {
       document.body.className = `theme-${theme}`;
   }, [profile?.theme]);
 
-  // Load state
+  // Supabase Session Management
   useEffect(() => {
-    const savedProfile = localStorage.getItem('king_profile');
-    const savedHabits = localStorage.getItem('king_habits');
-    const savedBooks = localStorage.getItem('king_books');
-    if (savedProfile) {
-        const parsed = JSON.parse(savedProfile);
-        setProfile({ ...parsed, totalStudyMinutes: parsed.totalStudyMinutes || 0 });
-        // If profile exists, skip landing page
-        setShowLanding(false);
-    }
-    if (savedHabits) {
-        const parsed = JSON.parse(savedHabits);
-        setHabits(parsed.map((h: any) => ({
-            ...h,
-            history: h.history || (h.completed ? { [new Date().toISOString().split('T')[0]]: true } : {}),
-            currentStreak: h.currentStreak || 0
-        })));
-    }
-    if (savedBooks) setBookProgress(JSON.parse(savedBooks));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Save state
+  // Load user profile and data from Supabase or local storage (if no session)
   useEffect(() => {
-    if (profile) localStorage.setItem('king_profile', JSON.stringify(profile));
-    if (habits) localStorage.setItem('king_habits', JSON.stringify(habits));
-    if (bookProgress) localStorage.setItem('king_books', JSON.stringify(bookProgress));
-  }, [profile, habits, bookProgress]);
+    const fetchUserProfile = async () => {
+      if (session) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
 
-  const handleOnboardingComplete = (newProfile: UserProfile) => {
-    setProfile({ ...newProfile, totalStudyMinutes: 0, theme: 'mint', language: AppLanguage.ENGLISH });
-    
-    // Assign habits based on demographic
-    let initialHabits: Habit[] = [];
-    if (newProfile.demographic === Demographic.NON_JEWISH) {
-        initialHabits = [
-            { id: '1', title: 'Daily Prayer', category: 'SPEECH', history: {}, frequency: 'DAILY', currentStreak: 0 },
-            { id: '2', title: 'Give Charity', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
-            { id: '3', title: 'Act of Kindness', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
-        ];
-    } else {
-        initialHabits = [
-            { id: '1', title: 'Morning Brachos', category: 'SPEECH', history: {}, frequency: 'DAILY', currentStreak: 0 },
-            { id: '2', title: 'Tefillin', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
-            { id: '3', title: 'Chesed Action', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
-        ];
+          if (error && error.code === 'PGRST116') { // No row found
+            setIsOnboardingNeeded(true);
+            setProfile(null); // Clear profile if not found
+            return;
+          } else if (error) {
+            throw error;
+          }
+
+          if (data) {
+            setProfile({ 
+              id: data.id,
+              name: data.name,
+              demographic: data.demographic,
+              level: data.level || 1,
+              streak: data.streak || 0,
+              totalStudyMinutes: data.total_study_minutes || 0,
+              theme: data.theme || 'mint',
+              language: data.language || AppLanguage.ENGLISH,
+              community: data.community,
+              newsInterests: data.news_interests || []
+            });
+            setIsOnboardingNeeded(false);
+            // Load habits and book progress from local storage for now (will migrate later)
+            const savedHabits = localStorage.getItem(`king_habits_${session.user.id}`);
+            const savedBooks = localStorage.getItem(`king_books_${session.user.id}`);
+            if (savedHabits) {
+                const parsed = JSON.parse(savedHabits);
+                setHabits(parsed.map((h: any) => ({
+                    ...h,
+                    history: h.history || (h.completed ? { [new Date().toISOString().split('T')[0]]: true } : {}),
+                    currentStreak: h.currentStreak || 0
+                })));
+            }
+            if (savedBooks) setBookProgress(JSON.parse(savedBooks));
+          }
+        } catch (error: any) {
+          console.error('Error fetching user profile:', error.message);
+          showError('Failed to load profile. Please try again.');
+        }
+      } else {
+        // Clear profile and data if no session
+        setProfile(null);
+        setHabits([]);
+        setBookProgress([]);
+        setIsOnboardingNeeded(false); // Reset onboarding state
+      }
+    };
+
+    fetchUserProfile();
+  }, [session]);
+
+  // Save state to local storage (will be replaced by Supabase storage later)
+  useEffect(() => {
+    if (profile && session?.user?.id) {
+      localStorage.setItem(`king_profile_${session.user.id}`, JSON.stringify(profile));
+      localStorage.setItem(`king_habits_${session.user.id}`, JSON.stringify(habits));
+      localStorage.setItem(`king_books_${session.user.id}`, JSON.stringify(bookProgress));
     }
-    
-    setHabits(initialHabits);
+  }, [profile, habits, bookProgress, session]);
+
+  const handleOnboardingComplete = async (newProfileData: Omit<UserProfile, 'id' | 'totalStudyMinutes' | 'theme' | 'language'>) => {
+    if (!session?.user) {
+      showError('No active session to complete onboarding.');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          id: session.user.id,
+          name: newProfileData.name,
+          demographic: newProfileData.demographic,
+          level: 1,
+          streak: 0,
+          total_study_minutes: 0,
+          theme: 'mint',
+          language: AppLanguage.ENGLISH,
+          community: newProfileData.community,
+          news_interests: newProfileData.newsInterests
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        const createdProfile: UserProfile = {
+          id: data.id,
+          name: data.name,
+          demographic: data.demographic,
+          level: data.level,
+          streak: data.streak,
+          totalStudyMinutes: data.total_study_minutes,
+          theme: data.theme,
+          language: data.language,
+          community: data.community,
+          newsInterests: data.news_interests
+        };
+        setProfile(createdProfile);
+        setIsOnboardingNeeded(false);
+        showSuccess('Welcome to the Kingdom!');
+
+        // Assign initial habits based on demographic
+        let initialHabits: Habit[] = [];
+        if (createdProfile.demographic === Demographic.NON_JEWISH) {
+            initialHabits = [
+                { id: '1', title: 'Daily Prayer', category: 'SPEECH', history: {}, frequency: 'DAILY', currentStreak: 0 },
+                { id: '2', title: 'Give Charity', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
+                { id: '3', title: 'Act of Kindness', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
+            ];
+        } else {
+            initialHabits = [
+                { id: '1', title: 'Morning Brachos', category: 'SPEECH', history: {}, frequency: 'DAILY', currentStreak: 0 },
+                { id: '2', title: 'Tefillin', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
+                { id: '3', title: 'Chesed Action', category: 'ACTION', history: {}, frequency: 'DAILY', currentStreak: 0 },
+            ];
+        }
+        setHabits(initialHabits);
+      }
+    } catch (error: any) {
+      console.error('Error completing onboarding:', error.message);
+      showError('Failed to complete onboarding. Please try again.');
+    }
   };
 
   const toggleHabit = (id: string, dateStr: string) => {
@@ -115,29 +218,94 @@ const App: React.FC = () => {
       });
   };
 
-  const updateTheme = (theme: AppTheme) => {
-      if (profile) setProfile({ ...profile, theme });
+  const updateTheme = async (theme: AppTheme) => {
+      if (profile && session?.user) {
+          try {
+              const { error } = await supabase
+                .from('profiles')
+                .update({ theme })
+                .eq('id', session.user.id);
+              if (error) throw error;
+              setProfile({ ...profile, theme });
+              showSuccess('Theme updated!');
+          } catch (error: any) {
+              showError('Failed to update theme: ' + error.message);
+          }
+      }
   };
 
-  const updateLanguage = (language: AppLanguage) => {
-      if (profile) setProfile({ ...profile, language });
+  const updateLanguage = async (language: AppLanguage) => {
+      if (profile && session?.user) {
+          try {
+              const { error } = await supabase
+                .from('profiles')
+                .update({ language })
+                .eq('id', session.user.id);
+              if (error) throw error;
+              setProfile({ ...profile, language });
+              showSuccess('Language updated!');
+          } catch (error: any) {
+              showError('Failed to update language: ' + error.message);
+          }
+      }
   }
 
-  const updateCommunity = (community: string) => {
-      if (profile) setProfile({ ...profile, community });
+  const updateCommunity = async (community: string) => {
+      if (profile && session?.user) {
+          try {
+              const { error } = await supabase
+                .from('profiles')
+                .update({ community })
+                .eq('id', session.user.id);
+              if (error) throw error;
+              setProfile({ ...profile, community });
+              showSuccess('Community updated!');
+          } catch (error: any) {
+              showError('Failed to update community: ' + error.message);
+          }
+      }
   }
 
-  const updateName = (name: string) => {
-      if (profile) setProfile({ ...profile, name });
+  const updateName = async (name: string) => {
+      if (profile && session?.user) {
+          try {
+              const { error } = await supabase
+                .from('profiles')
+                .update({ name })
+                .eq('id', session.user.id);
+              if (error) throw error;
+              setProfile({ ...profile, name });
+              showSuccess('Name updated!');
+          } catch (error: any) {
+              showError('Failed to update name: ' + error.message);
+          }
+      }
   }
 
-  const resetProfile = () => {
-      if(confirm("Reset all data?")) {
-          localStorage.clear();
-          setProfile(null);
-          setHabits([]);
-          setBookProgress([]);
-          setShowLanding(true); // Go back to landing page on reset
+  const resetProfile = async () => {
+      if(confirm("Reset all data? This will sign you out and delete your profile from Supabase.")) {
+          try {
+              // Delete profile from Supabase
+              const { error: deleteProfileError } = await supabase
+                .from('profiles')
+                .delete()
+                .eq('id', session?.user?.id);
+              if (deleteProfileError) throw deleteProfileError;
+
+              // Sign out from Supabase
+              const { error: signOutError } = await supabase.auth.signOut();
+              if (signOutError) throw signOutError;
+
+              localStorage.clear(); // Clear local storage
+              setProfile(null);
+              setHabits([]);
+              setBookProgress([]);
+              setSession(null);
+              setIsOnboardingNeeded(false);
+              showSuccess('Profile reset and signed out successfully!');
+          } catch (error: any) {
+              showError('Failed to reset profile: ' + error.message);
+          }
       }
   }
 
@@ -150,11 +318,23 @@ const App: React.FC = () => {
   }
 
   // ROUTING LOGIC
-  if (showLanding && !profile) {
-      return <LandingPage onEnter={() => setShowLanding(false)} />;
+  if (!session) {
+      return <Auth onAuthSuccess={() => { /* Session change handled by useEffect */ }} />;
   }
 
-  if (!profile) return <Onboarding onComplete={handleOnboardingComplete} />;
+  if (isOnboardingNeeded) {
+      return <Onboarding onComplete={handleOnboardingComplete} />;
+  }
+
+  if (!profile) {
+      // This state should ideally not be reached if session and onboarding are handled correctly
+      // but can act as a loading state or fallback.
+      return (
+        <div className="fixed inset-0 flex items-center justify-center bg-king-cream">
+            <p className="text-king-text font-display text-2xl animate-pulse">Loading Profile...</p>
+        </div>
+      );
+  }
 
   return (
     <Layout 
