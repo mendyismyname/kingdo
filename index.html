@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
     <title>King.do</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,57 +33,20 @@
         --king-secondary: #FACC15;
       }
       body {
-        background-color: #FDFBF7;
+        /* FIX 2: Ensure background matches your landing page */
+        background-color: #FDFBF7; 
         color: #1E293B;
         -webkit-tap-highlight-color: transparent;
+        margin: 0; /* Safety reset */
       }
       .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
       ::-webkit-scrollbar { width: 6px; height: 6px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: var(--king-primary); }
-      .glass-nav {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        padding-bottom: calc(12px + env(safe-area-inset-bottom));
-        border-top: 1px solid rgba(0,0,0,0.05);
-      }
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      .text-gradient {
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-image: linear-gradient(135deg, var(--king-primary) 0%, var(--king-primary-light) 100%);
-      }
-      .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .delay-100 { animation-delay: 100ms; }
-      .delay-200 { animation-delay: 200ms; }
-      .delay-300 { animation-delay: 300ms; }
-      .delay-400 { animation-delay: 400ms; }
-      .delay-500 { animation-delay: 500ms; }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "three": "https://esm.sh/three@0.160.0"
-  }
-}
-</script>
-</head>
+    
+    </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
