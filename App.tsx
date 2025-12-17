@@ -20,6 +20,7 @@ const App: React.FC = () => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [bookProgress, setBookProgress] = useState<BookProgress[]>([]);
   const [isOnboardingNeeded, setIsOnboardingNeeded] = useState(false); // New state for onboarding
+  const [showLanding, setShowLanding] = useState(true); // State to control LandingPage visibility
   
   // Mobile Study Mode: 'text' (default) or 'chat'
   const [mobileStudyMode, setMobileStudyMode] = useState<'text' | 'chat'>('text');
@@ -34,10 +35,16 @@ const App: React.FC = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session) {
+        setShowLanding(false); // If already logged in, skip landing page
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session) {
+        setShowLanding(false); // If user logs in, skip landing page
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -302,6 +309,7 @@ const App: React.FC = () => {
               setBookProgress([]);
               setSession(null);
               setIsOnboardingNeeded(false);
+              setShowLanding(true); // Go back to landing page after reset
               showSuccess('Profile reset and signed out successfully!');
           } catch (error: any) {
               showError('Failed to reset profile: ' + error.message);
@@ -318,6 +326,10 @@ const App: React.FC = () => {
   }
 
   // ROUTING LOGIC
+  if (showLanding) {
+    return <LandingPage onEnter={() => setShowLanding(false)} />;
+  }
+
   if (!session) {
       return <Auth onAuthSuccess={() => { /* Session change handled by useEffect */ }} />;
   }
