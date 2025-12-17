@@ -153,7 +153,7 @@ const LandingContent: React.FC<LandingPageProps & { hasEntered: boolean }> = ({ 
         {/* Layer 1: Hero - TRANSPARENT to show 3D BG */}
         <div style={{ opacity: pAscend > 0.1 ? 0 : 1, transition: 'opacity 0.5s' }}>
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                 <div style={} className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-white via-white/10 to-transparent opacity-40 animate-pulse-slow" />
+                 <div style={{}} className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] bg-gradient-radial from-white via-white/10 to-transparent opacity-40 animate-pulse-slow" />
             </div>
         </div>
 
