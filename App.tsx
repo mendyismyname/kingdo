@@ -12,7 +12,7 @@ import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } 
 import { supabase } from './src/lib/supabase';
 import { Auth } from './src/components/Auth';
 // Import the test component
-import { EnvTest } from './components/EnvTest';
+import { EnvTest } from './src/components/EnvTest';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any | null>(null);
