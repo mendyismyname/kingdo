@@ -4,9 +4,14 @@ import * as THREE from 'three';
 export const TempleScene = ({ isActive }: { isActive: boolean }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+useEffect(() => {
         if (!containerRef.current) return;
 
+        // ✅ ADD THIS LINE to kill any frozen zombie canvases
+        containerRef.current.innerHTML = ''; 
+
+        // --- Configuration ---
+        // ... rest of your code ...
         // --- Configuration ---
         const CONFIG = {
             stairCount: 80,
