@@ -439,59 +439,85 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
         let frameId: number;
 
+        // --- ANIMATION LOOP (Debug Version) ---
+        let scrollPercent = 0;
+        let targetScrollPercent = 0;
+        const clock = new THREE.Clock();
+        const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
+        let frameId: number;
+
         const animate = () => {
             frameId = requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
-            // Scroll Logic - Calculate every frame
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight; 
+            // 1. ROBUST SCROLL CALCULATION
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const docHeight = Math.max(
+                document.body.scrollHeight, 
+                document.documentElement.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.offsetHeight
+            );
             const winHeight = window.innerHeight;
             const scrollable = docHeight - winHeight;
-            
+
+            // Update target percentage
             if (scrollable > 0) {
                 targetScrollPercent = Math.max(0, Math.min(1, scrollTop / scrollable));
             }
 
+            // Lerp for smoothness
             scrollPercent = lerp(scrollPercent, targetScrollPercent, 0.05);
 
+            // 2. DEBUG LOG (Open console to see this!)
+            // Un-comment the line below if you suspect scroll is stuck at 0
+            // console.log("Scroll %:", scrollPercent.toFixed(3), "Height:", scrollable);
+
+            // 3. ANIMATIONS
+            
+            // Skybox rotation
             if (skyBox.material instanceof THREE.MeshBasicMaterial && skyBox.material.map) {
                 skyBox.material.map.offset.x = time * 0.01; 
             }
 
             // Particles
-            const positions = particleGeo.attributes.position.array as Float32Array;
-            for(let i=0; i<particleCount; i++) {
-                positions[i*3+1] += particleSpeeds[i]; 
-                if(positions[i*3+1] > 80) positions[i*3+1] = -20;
+            if (particleGeo && particleGeo.attributes.position) {
+                const positions = particleGeo.attributes.position.array as Float32Array;
+                for(let i=0; i<particleCount; i++) {
+                    positions[i*3+1] += particleSpeeds[i]; 
+                    if(positions[i*3+1] > 80) positions[i*3+1] = -20;
+                }
+                particleGeo.attributes.position.needsUpdate = true;
             }
-            particleGeo.attributes.position.needsUpdate = true;
 
             // Smoke
-            const sPos = smokePGeo.attributes.position.array as Float32Array;
-            for(let i=0; i<smokeCount; i++) {
-                const data = smokePData[i];
-                sPos[i*3+1] += data.speed; 
-                sPos[i*3] += Math.sin(time + data.offset) * 0.02;
-                
-                if(sPos[i*3+1] > 35 + mizbeachHeight) {
-                    sPos[i*3+1] = mizbeachHeight + 1;
-                    sPos[i*3] = (Math.random() - 0.5) * 5;
-                    sPos[i*3+2] = mizbeachZ + (Math.random() - 0.5) * 5;
+            if (smokePGeo && smokePGeo.attributes.position) {
+                const sPos = smokePGeo.attributes.position.array as Float32Array;
+                for(let i=0; i<smokeCount; i++) {
+                    const data = smokePData[i];
+                    sPos[i*3+1] += data.speed; 
+                    sPos[i*3] += Math.sin(time + data.offset) * 0.02;
+                    
+                    if(sPos[i*3+1] > 35 + mizbeachHeight) {
+                        sPos[i*3+1] = mizbeachHeight + 1;
+                        sPos[i*3] = (Math.random() - 0.5) * 5;
+                        sPos[i*3+2] = mizbeachZ + (Math.random() - 0.5) * 5;
+                    }
                 }
+                smokePGeo.attributes.position.needsUpdate = true;
             }
-            smokePGeo.attributes.position.needsUpdate = true;
 
-            // Steps
+            // Steps (Stairs rising)
             steps.forEach((step, i) => {
                 const stepThreshold = i / (steps.length + 8); 
                 const activation = (scrollPercent * 1.3) - stepThreshold;
                 let activeState = Math.max(0, Math.min(1, activation * 4));
-                step.position.y = lerp(step.userData.initialY, step.userData.targetY, activeState);
+                if (step.userData) {
+                    step.position.y = lerp(step.userData.initialY, step.userData.targetY, activeState);
+                }
             });
 
             // Camera Movement
-            // Start at z=60 (close) -> move to z=20 (closer/higher)
             const startPos = new THREE.Vector3(0, 5, 60); 
             const endPos = new THREE.Vector3(0, 60, 20);
             
@@ -502,6 +528,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
             camera.lookAt(0, 30, -50);
             renderer.render(scene, camera);
         };
+
 
         animate();
 
