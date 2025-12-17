@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } from "../types";
+import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } from "../../types";
 
 // --- Constants ---
 const MODEL_ID = "gemini-1.5-flash";
