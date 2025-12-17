@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
 import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 const MODEL_ID = "gemini-2.5-flash";
 
