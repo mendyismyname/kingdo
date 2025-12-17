@@ -4,14 +4,22 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check if the required environment variables are present
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase URL or Anon Key is missing. Please check your .env.local file.');
-  console.error('Expected VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to be set.');
-  // Depending on your app's requirements, you might want to throw an error here
-  // or export a null/undefined client. For now, we'll proceed but the client creation will fail.
+// Strict check for required environment variables
+if (!supabaseUrl) {
+  console.error('❌ VITE_SUPABASE_URL is missing. Please check your .env.local file.');
+  // Throwing an error here will prevent the client from being created with an undefined URL
+  throw new Error('VITE_SUPABASE_URL is required.');
 }
 
-// Create the Supabase client instance
-// The createClient function itself will throw an error if url or key are invalid/missing
+if (!supabaseAnonKey) {
+  console.error('❌ VITE_SUPABASE_ANON_KEY is missing. Please check your .env.local file.');
+  // Throwing an error here will prevent the client from being created with an undefined key
+  throw new Error('VITE_SUPABASE_ANON_KEY is required.');
+}
+
+console.log('✅ Supabase environment variables found.');
+console.log('   VITE_SUPABASE_URL (first 20 chars):', supabaseUrl.substring(0, 20) + '...');
+console.log('   VITE_SUPABASE_ANON_KEY (first 10 chars):', supabaseAnonKey.substring(0, 10) + '...');
+
+// Create the Supabase client instance only if variables are present
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
