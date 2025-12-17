@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Function to get environment variables with better error handling
 const getEnvVar = (name: string): string => {
   const value = import.meta.env[name];
