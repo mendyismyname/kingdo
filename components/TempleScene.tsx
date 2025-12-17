@@ -6,7 +6,8 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
 
     useEffect(() => {
         if (!containerRef.current) return;
-
+// ✅ ADD THIS LINE to kill any frozen zombie canvases              
+        containerRef.current.innerHTML = ''; 
         // --- Configuration ---
         const CONFIG = {
             stairCount: 150, // Increased for longer duration feel
