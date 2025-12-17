@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { UserProfile, Insight, Habit, NewsItem } from '../../types';
-import { generateDailyInsight } from '../../services/geminiService';
+import { UserProfile, Insight, Habit, NewsItem } from '../types';
+import { generateDailyInsight } from '../services/geminiService';
 
 interface DashboardProps {
   userProfile: UserProfile;

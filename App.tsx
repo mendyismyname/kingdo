@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Onboarding } from './components/Onboarding';
-import { Layout } from './components/Layout';
-import { Dashboard } from './components/Dashboard';
-import { HabitTracker } from './components/HabitTracker';
-import { StudySession } from './components/StudySession';
-import { Library } from './components/Library';
-import { Profile } from './components/Profile';
-import { Community } from './components/Community';
-import { LandingPage } from './components/LandingPage';
-import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
+import { Onboarding } from './src/components/Onboarding';
+import { Layout } from './src/components/Layout';
+import { Dashboard } from './src/components/Dashboard';
+import { HabitTracker } from './src/components/HabitTracker';
+import { StudySession } from './src/components/StudySession';
+import { Library } from './src/components/Library';
+import { Profile } from './src/components/Profile';
+import { Community } from './src/components/Community';
+import { LandingPage } from './src/components/LandingPage';
+import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './src/types';
 import { supabase } from './src/lib/supabase';
 import { Auth } from './src/components/Auth';
-import './src/index.css'; // Make sure this line exists!
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any | null>(null);
@@ -25,8 +24,11 @@ const App: React.FC = () => {
 
   // Theme Management
   useEffect(() => {
-    const theme = profile?.theme || 'mint';
-    document.body.className = `theme-${theme}`;
+    if (profile?.theme) {
+      document.body.className = `theme-${profile.theme}`;
+    } else {
+      document.body.className = 'theme-mint';
+    }
   }, [profile?.theme]);
 
   // Supabase Session Management
@@ -68,18 +70,20 @@ const App: React.FC = () => {
           }
 
           if (data) {
-            setProfile({
+            const userProfile: UserProfile = {
               id: data.id,
-              name: data.name,
-              demographic: data.demographic,
+              name: data.name || 'User',
+              demographic: data.demographic || Demographic.GENERAL_JEWISH,
               level: data.level || 1,
               streak: data.streak || 0,
               totalStudyMinutes: data.total_study_minutes || 0,
               theme: data.theme || 'mint',
               language: data.language || AppLanguage.ENGLISH,
-              community: data.community,
+              community: data.community || '',
               newsInterests: data.news_interests || []
-            });
+            };
+            
+            setProfile(userProfile);
             setIsOnboardingNeeded(false);
 
             const savedHabits = localStorage.getItem(`king_habits_${session.user.id}`);
