@@ -9,7 +9,7 @@ import { Profile } from './components/Profile';
 import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
-import { supabase } from './lib/supabase';
+import { supabase } from './src/lib/supabase';
 import { Auth } from './components/Auth';
 
 const App: React.FC = () => {
