@@ -453,8 +453,6 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         const clock = new THREE.Clock();
 
 
-
-        window.addEventListener('scroll', handleScroll);
         
         const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
