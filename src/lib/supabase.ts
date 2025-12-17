@@ -22,10 +22,9 @@ try {
   console.log('   VITE_SUPABASE_ANON_KEY (length):', supabaseAnonKey.length);
 
   // Create the Supabase client instance
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
   console.log('✅ Supabase client created successfully.');
 } catch (error) {
   console.error('❌ Failed to initialize Supabase client:', error);
   throw error;
 }
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
