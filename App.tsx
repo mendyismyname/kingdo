@@ -10,7 +10,7 @@ import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
 import { supabase } from './src/lib/supabase'; // Corrected import path
-import { Auth } from './components/Auth'; // Import Auth component
+import { Auth } from './src/components/Auth'; // Import Auth component
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any | null>(null); // Supabase session
