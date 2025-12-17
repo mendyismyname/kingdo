@@ -23,7 +23,7 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
         scene.fog = new THREE.FogExp2(0x8fa3c0, 0.006);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 3000);
-        camera.position.set(0, 5, 90);
+        camera.position.set(0, 5, 60);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
