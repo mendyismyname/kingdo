@@ -1,25 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Log all environment variables for debugging
-console.log('🔍 Supabase client: All import.meta.env keys:', Object.keys(import.meta.env));
+// Function to get environment variables with better error handling
+const getEnvVar = (name: string): string => {
+  const value = import.meta.env[name];
+  if (typeof value !== 'string' || value.trim() === '') {
+    console.error(`❌ Environment variable ${name} is missing or invalid.`);
+    console.error(`   Current value:`, value);
+    console.error(`   Type:`, typeof value);
+    throw new Error(`${name} is required and must be a non-empty string.`);
+  }
+  return value;
+};
 
-// Try to get the environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+try {
+  // Get environment variables
+  const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
+  const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
+  
+  console.log('✅ Supabase environment variables loaded successfully.');
+  console.log('   VITE_SUPABASE_URL (first 30 chars):', supabaseUrl.substring(0, 30) + '...');
+  console.log('   VITE_SUPABASE_ANON_KEY (length):', supabaseAnonKey.length);
 
-console.log('🔍 Supabase client: VITE_SUPABASE_URL:', supabaseUrl);
-console.log('🔍 Supabase client: VITE_SUPABASE_ANON_KEY (length):', supabaseAnonKey?.length);
-
-// Check if the required environment variables are present
-if (!supabaseUrl) {
-  console.error('❌ VITE_SUPABASE_URL is missing.');
-  throw new Error('VITE_SUPABASE_URL is required.');
+  // Create the Supabase client instance
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  console.log('✅ Supabase client created successfully.');
+} catch (error) {
+  console.error('❌ Failed to initialize Supabase client:', error);
+  throw error;
 }
-
-if (!supabaseAnonKey) {
-  console.error('❌ VITE_SUPABASE_ANON_KEY is missing.');
-  throw new Error('VITE_SUPABASE_ANON_KEY is required.');
-}
-
-// Create the Supabase client instance
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Onboarding } from './src/components/Onboarding';
+import { Onboarding } from './components/Onboarding';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
-import { HabitTracker } from './src/components/HabitTracker';
+import { HabitTracker } from './components/HabitTracker';
 import { StudySession } from './components/StudySession';
-import { Library } from './src/components/Library';
+import { Library } from './components/Library';
 import { Profile } from './components/Profile';
 import { Community } from './components/Community';
 import { LandingPage } from './components/LandingPage';
 import { UserProfile, Habit, BookProgress, Demographic, AppTheme, AppLanguage } from './types';
-import { supabase } from './src/lib/supabase';
-import { Auth } from './src/components/Auth';
-// Import the test component
-import { EnvTest } from './src/components/EnvTest';
+import { supabase } from './lib/supabase';
+import { Auth } from './components/Auth';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any | null>(null);
@@ -23,8 +21,6 @@ const App: React.FC = () => {
   const [isOnboardingNeeded, setIsOnboardingNeeded] = useState(false);
   const [showLanding, setShowLanding] = useState(true);
   const [mobileStudyMode, setMobileStudyMode] = useState<'text' | 'chat'>('text');
-  // State for showing the env test
-  const [showEnvTest, setShowEnvTest] = useState(true);
 
   // Theme Management
   useEffect(() => {
@@ -302,23 +298,6 @@ const App: React.FC = () => {
     if (tab !== 'study' && tab !== 'library') {
       setMobileStudyMode('text');
     }
-  }
-
-  // Show environment test component first
-  if (showEnvTest) {
-    return (
-      <div className="min-h-screen bg-king-cream p-6">
-        <div className="max-w-4xl mx-auto">
-          <EnvTest />
-          <button 
-            onClick={() => setShowEnvTest(false)}
-            className="mt-4 px-4 py-2 bg-king-primary text-white rounded-lg"
-          >
-            Continue to App
-          </button>
-        </div>
-      </div>
-    );
   }
 
   // ROUTING LOGIC
