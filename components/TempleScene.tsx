@@ -468,6 +468,29 @@ export const TempleScene = ({ isActive }: { isActive: boolean }) => {
                 skyBox.material.map.offset.x = time * 0.01; 
             }
 
+            // ... inside the animate() function ...
+
+const animate = () => {
+    frameId = requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+
+    // ✅ ADD THIS SCROLL LOGIC HERE INSTEAD:
+    const scrollTop = window.scrollY;
+    // We use document.documentElement which is more reliable for <html> scrolling
+    const docHeight = document.documentElement.scrollHeight; 
+    const winHeight = window.innerHeight;
+    
+    // Recalculate target every frame
+    const scrollable = docHeight - winHeight;
+    if (scrollable > 0) {
+        targetScrollPercent = Math.max(0, Math.min(1, scrollTop / scrollable));
+    }
+
+    // Keep your existing lerp logic
+    scrollPercent = lerp(scrollPercent, targetScrollPercent, 0.05);
+
+    // ... Keep the rest of your animation code (particles, smoke, steps, camera) ...
+
             // Animate Particles
             const positions = particleGeo.attributes.position.array as Float32Array;
             for(let i=0; i<particleCount; i++) {
