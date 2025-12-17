@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { Demographic, UserProfile, Insight, BookLesson, AppLanguage, NewsItem } from "../../types";
 
 // --- Constants ---
